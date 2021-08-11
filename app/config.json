@@ -1,0 +1,20 @@
+{
+  "debug": true,
+  "server": {
+    "address": ":3000"
+  },
+  "context": {
+    "timeout": 5
+  },
+  "database": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "pass": "",
+    "name": "injar"
+  },
+  "jwt": {
+    "secret": "SuperSecret12345!@#$%",
+    "expired": 10
+  }
+}
