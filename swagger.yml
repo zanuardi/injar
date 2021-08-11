@@ -49,123 +49,84 @@ paths:
         405:
           description: Invalid input
       security:
-      - petstore_auth:
-        - write:pets
-        - read:pets
+      - injar_auth:
+        - write:categories
+        - read:categories
     put:
       tags:
-      - pet
-      summary: Update an existing pet
-      operationId: updatePet
+      - categories
+      summary: Update an existing category
+      operationId: updateCategory
       consumes:
       - application/json
-      - application/xml
       produces:
       - application/json
-      - application/xml
       parameters:
       - in: body
         name: body
-        description: Pet object that needs to be added to the store
+        description: Category object that needs to be added to the store
         required: true
         schema:
-          $ref: '#/definitions/Pet'
+          $ref: '#/definitions/Category'
       responses:
         400:
           description: Invalid ID supplied
         404:
-          description: Pet not found
+          description: Category not found
         405:
           description: Validation exception
       security:
-      - petstore_auth:
-        - write:pets
-        - read:pets
-  /pet/findByStatus:
+      - injar_auth:
+        - write:categories
+        - read:categories
+  /categories/findByName:
     get:
       tags:
-      - pet
-      summary: Finds Pets by status
-      description: Multiple status values can be provided with comma separated strings
-      operationId: findPetsByStatus
+      - categories
+      summary: Finds Categories by Categories
+      operationId: findPetsByCategories
       produces:
       - application/json
       - application/xml
       parameters:
-      - name: status
+      - name: Categories
         in: query
-        description: Status values that need to be considered for filter
+        description: Categories values that need to be considered for filter
         required: true
         type: array
         items:
           type: string
           enum:
-          - available
-          - pending
-          - sold
+          - education
+          - self-improvement
+          - investment
           default: available
-        collectionFormat: multi
       responses:
         200:
           description: successful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/Pet'
+              $ref: '#/definitions/Categories'
         400:
           description: Invalid status value
       security:
-      - petstore_auth:
-        - write:pets
-        - read:pets
-  /pet/findByTags:
+      - injar_auth:
+        - write:categories
+        - read:categories
+  /categories/{categoryId}:
     get:
       tags:
-      - pet
-      summary: Finds Pets by tags
-      description: Muliple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing.
-      operationId: findPetsByTags
+      - category
+      summary: Find categoru by ID
+      description: Returns a single category
+      operationId: getCategoryById
       produces:
       - application/json
-      - application/xml
       parameters:
-      - name: tags
-        in: query
-        description: Tags to filter by
-        required: true
-        type: array
-        items:
-          type: string
-        collectionFormat: multi
-      responses:
-        200:
-          description: successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Pet'
-        400:
-          description: Invalid tag value
-      security:
-      - petstore_auth:
-        - write:pets
-        - read:pets
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - pet
-      summary: Find pet by ID
-      description: Returns a single pet
-      operationId: getPetById
-      produces:
-      - application/json
-      - application/xml
-      parameters:
-      - name: petId
+      - name: categoryId
         in: path
-        description: ID of pet to return
+        description: ID of category to return
         required: true
         type: integer
         format: int64
@@ -173,11 +134,11 @@ paths:
         200:
           description: successful operation
           schema:
-            $ref: '#/definitions/Pet'
+            $ref: '#/definitions/Category'
         400:
           description: Invalid ID supplied
         404:
-          description: Pet not found
+          description: Category not found
       security:
       - api_key: []
     post:

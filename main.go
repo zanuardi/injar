@@ -1,9 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"injar/configs"
+	"injar/routes"
+)
 
 func main() {
-	fmt.Println("Hello world")
-	fmt.Println("Hello User1")
-	fmt.Println("Hello Users")
+	configs.InitDB()
+	e := routes.New()
+	e.Start(":8000")
 }
