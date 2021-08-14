@@ -2,7 +2,9 @@ package mysql
 
 import (
 	"fmt"
-	usersRepo "injar/drivers/databases/users"
+	categoriesRepo "injar/repository/databases/categories"
+	usersRepo "injar/repository/databases/users"
+
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -32,6 +34,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 
 	db.AutoMigrate(
 		&usersRepo.Users{},
+		&categoriesRepo.Categories{},
 	)
 
 	return db

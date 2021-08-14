@@ -1,7 +1,7 @@
 package response
 
 import (
-	"injar/businesses/users"
+	"injar/usecase/users"
 	"time"
 )
 

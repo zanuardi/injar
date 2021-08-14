@@ -3,10 +3,15 @@ package main
 import (
 	_middleware "injar/app/middleware"
 	_routes "injar/app/routes"
-	_userUsecase "injar/businesses/users"
 	_userController "injar/controllers/users"
-	_userRepo "injar/drivers/databases/users"
-	_dbDriver "injar/drivers/mysql"
+	_userRepo "injar/repository/databases/users"
+	_userUsecase "injar/usecase/users"
+
+	_categoriesController "injar/controllers/categories"
+	_categoriesRepo "injar/repository/databases/categories"
+	_categoriesUsecase "injar/usecase/categories"
+
+	_dbDriver "injar/repository/mysql"
 
 	"log"
 	"time"
@@ -47,13 +52,20 @@ func main() {
 
 	e := echo.New()
 
+	// Users ...
 	userRepo := _userRepo.NewMySQLUserRepository(db)
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
+	// Categories ...
+	categoriesRepo := _categoriesRepo.NewMySQLCategoryRepository(db)
+	categoriesUsecase := _categoriesUsecase.NewCategoryUsecase(timeoutContext, categoriesRepo)
+	categoriesCtrl := _categoriesController.NewCategoryController(categoriesUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:  configJWT.Init(),
-		UserController: *userCtrl,
+		JWTMiddleware:        configJWT.Init(),
+		UserController:       *userCtrl,
+		CategoriesController: *categoriesCtrl,
 	}
 	routesInit.RouteRegister(e)
 
