@@ -2,18 +2,19 @@ package categories
 
 import (
 	"context"
+	"fmt"
 	"injar/businesses/categories"
 
 	"gorm.io/gorm"
 )
 
 type mysqlCategoriesRepository struct {
-	Conn *gorm.DB
+	DB *gorm.DB
 }
 
-func NewMySQLUserRepository(conn *gorm.DB) categories.Repository {
+func NewMySQLCategoryRepository(conn *gorm.DB) categories.Repository {
 	return &mysqlCategoriesRepository{
-		Conn: conn,
+		DB: conn,
 	}
 }
 
@@ -21,13 +22,13 @@ func (cr *mysqlCategoriesRepository) Fetch(ctx context.Context, page, perpage in
 	rec := []Categories{}
 
 	offset := (page - 1) * perpage
-	err := cr.Conn.Offset(offset).Limit(perpage).Find(&rec).Error
+	err := cr.DB.Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []categories.Domain{}, 0, err
 	}
 
 	var totalData int64
-	err = cr.Conn.Count(&totalData).Error
+	err = cr.DB.Count(&totalData).Error
 	if err != nil {
 		return []categories.Domain{}, 0, err
 	}
@@ -42,24 +43,25 @@ func (cr *mysqlCategoriesRepository) Fetch(ctx context.Context, page, perpage in
 func (cr *mysqlCategoriesRepository) Find(ctx context.Context) ([]categories.Domain, error) {
 	rec := []Categories{}
 
-	query := cr.Conn.Where("deleted_at = ?", nil)
+	// query := cr.Conn.Where("deleted_at = ?", nil)
 
-	err := query.Find(&rec).Error
-	if err != nil {
-		return []categories.Domain{}, err
-	}
+	// err := query.Find(&rec).Error
+	// if err != nil {
+	// 	return []categories.Domain{}, err
+	// }
 
 	categoryDomain := []categories.Domain{}
 	for _, value := range rec {
 		categoryDomain = append(categoryDomain, value.toDomain())
 	}
+	fmt.Println(categoryDomain)
 
 	return categoryDomain, nil
 }
 
 func (cr *mysqlCategoriesRepository) GetByID(ctx context.Context, userId int) (categories.Domain, error) {
 	rec := Categories{}
-	err := cr.Conn.Where("id = ?", userId).First(&rec).Error
+	err := cr.DB.Where("id = ?", userId).First(&rec).Error
 	if err != nil {
 		return categories.Domain{}, err
 	}
@@ -68,7 +70,7 @@ func (cr *mysqlCategoriesRepository) GetByID(ctx context.Context, userId int) (c
 
 func (nr *mysqlCategoriesRepository) GetByName(ctx context.Context, categoryName string) (categories.Domain, error) {
 	rec := Categories{}
-	err := nr.Conn.Where("name = ?", categoryName).First(&rec).Error
+	err := nr.DB.Where("name = ?", categoryName).First(&rec).Error
 	if err != nil {
 		return categories.Domain{}, err
 	}
@@ -78,12 +80,12 @@ func (nr *mysqlCategoriesRepository) GetByName(ctx context.Context, categoryName
 func (nr *mysqlCategoriesRepository) Store(ctx context.Context, categoriesDomain *categories.Domain) (categories.Domain, error) {
 	rec := fromDomain(categoriesDomain)
 
-	result := nr.Conn.Create(&rec)
+	result := nr.DB.Create(&rec)
 	if result.Error != nil {
 		return categories.Domain{}, result.Error
 	}
 
-	err := nr.Conn.Preload("Category").First(&rec, rec.ID).Error
+	err := nr.DB.Preload("Category").First(&rec, rec.ID).Error
 	if err != nil {
 		return categories.Domain{}, result.Error
 	}
@@ -94,12 +96,29 @@ func (nr *mysqlCategoriesRepository) Store(ctx context.Context, categoriesDomain
 func (nr *mysqlCategoriesRepository) Update(ctx context.Context, categoriesDomain *categories.Domain) (categories.Domain, error) {
 	rec := fromDomain(categoriesDomain)
 
-	result := nr.Conn.Save(&rec)
+	result := nr.DB.Updates(rec)
 	if result.Error != nil {
 		return categories.Domain{}, result.Error
 	}
 
-	err := nr.Conn.Preload("Category").First(&rec, rec.ID).Error
+	err := nr.DB.Preload("Category").First(&rec, rec.ID).Error
+	if err != nil {
+		return categories.Domain{}, result.Error
+	}
+
+	return rec.toDomain(), nil
+}
+
+func (nr *mysqlCategoriesRepository) Delete(ctx context.Context, categoriesDomain *categories.Domain) (categories.Domain, error) {
+	rec := fromDomain(categoriesDomain)
+
+	result := nr.DB.Delete(rec)
+
+	if result.Error != nil {
+		return categories.Domain{}, result.Error
+	}
+
+	err := nr.DB.Preload("Category").First(&rec, rec.ID).Error
 	if err != nil {
 		return categories.Domain{}, result.Error
 	}

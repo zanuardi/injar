@@ -6,6 +6,11 @@ import (
 	_userUsecase "injar/businesses/users"
 	_userController "injar/controllers/users"
 	_userRepo "injar/drivers/databases/users"
+
+	_categoriesUsecase "injar/businesses/categories"
+	_categoriesController "injar/controllers/categories"
+	_categoriesRepo "injar/drivers/databases/categories"
+
 	_dbDriver "injar/drivers/mysql"
 
 	"log"
@@ -47,13 +52,20 @@ func main() {
 
 	e := echo.New()
 
+	// Users ...
 	userRepo := _userRepo.NewMySQLUserRepository(db)
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
+	// Categories ...
+	categoriesRepo := _categoriesRepo.NewMySQLCategoryRepository(db)
+	categoriesUsecase := _categoriesUsecase.NewCategoryUsecase(timeoutContext, categoriesRepo)
+	categoriesCtrl := _categoriesController.NewCategoryController(categoriesUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:  configJWT.Init(),
-		UserController: *userCtrl,
+		JWTMiddleware:        configJWT.Init(),
+		UserController:       *userCtrl,
+		CategoriesController: *categoriesCtrl,
 	}
 	routesInit.RouteRegister(e)
 

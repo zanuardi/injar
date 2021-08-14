@@ -11,6 +11,7 @@ type Categories struct {
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
 func (rec *Categories) toDomain() categories.Domain {
@@ -19,6 +20,7 @@ func (rec *Categories) toDomain() categories.Domain {
 		Name:      rec.Name,
 		CreatedAt: rec.CreatedAt,
 		UpdatedAt: rec.UpdatedAt,
+		DeletedAt: rec.DeletedAt,
 	}
 }
 
@@ -28,5 +30,6 @@ func fromDomain(categoriesDomain *categoriesUsecase.Domain) *Categories {
 		Name:      categoriesDomain.Name,
 		CreatedAt: categoriesDomain.CreatedAt,
 		UpdatedAt: categoriesDomain.UpdatedAt,
+		DeletedAt: categoriesDomain.DeletedAt,
 	}
 }

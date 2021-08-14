@@ -80,22 +80,19 @@ func (cu *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (D
 	ctx, cancel := context.WithTimeout(ctx, cu.contextTimeout)
 	defer cancel()
 
-	_, err := cu.GetByID(ctx, categoryDomain.ID)
-	if err != nil {
-		return Domain{}, businesses.ErrCategoryNotFound
-	}
+	existedCategories, _ := cu.categoryRepository.GetByName(ctx, categoryDomain.Name)
 
-	existedCategories, err := cu.categoryRepository.GetByName(ctx, categoryDomain.Name)
-	if err != nil {
-		if !strings.Contains(err.Error(), "not_found") {
-			return Domain{}, err
-		}
-	}
 	if existedCategories != (Domain{}) {
 		return Domain{}, businesses.ErrDuplicateData
 	}
 
-	result, err := cu.categoryRepository.Store(ctx, categoryDomain)
+	// now := time.Now().UTC()
+	result := Domain{
+		Name:      categoryDomain.Name,
+		UpdatedAt: time.Now(),
+	}
+
+	result, err := cu.categoryRepository.Store(ctx, &result)
 	if err != nil {
 		return Domain{}, err
 	}

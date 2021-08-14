@@ -32,7 +32,23 @@ func (ctrl *CategoryController) GetAll(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	responseController := []response.Categories{}
+	responseController := []response.Category{}
+	for _, value := range resp {
+		responseController = append(responseController, response.FromDomain(value))
+	}
+
+	return controller.NewSuccessResponse(c, responseController)
+}
+
+func (ctrl *CategoryController) SelectAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	resp, _, err := ctrl.categoryUsecase.Fetch(ctx, 10, 10)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	responseController := []response.Category{}
 	for _, value := range resp {
 		responseController = append(responseController, response.FromDomain(value))
 	}
@@ -59,7 +75,7 @@ func (ctrl *CategoryController) Store(c echo.Context) error {
 func (ctrl *CategoryController) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	id := c.QueryParam("id")
+	id := c.Param("id")
 	if strings.TrimSpace(id) == "" {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, errors.New("missing required id"))
 	}

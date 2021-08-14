@@ -5,16 +5,16 @@ import (
 	"time"
 )
 
-type Categories struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt time.Time `json:"deleted_at"`
+type Category struct {
+	ID        int        `json:"id"`
+	Name      string     `json:"name"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
 }
 
-func FromDomain(domain categories.Domain) Categories {
-	return Categories{
+func FromDomain(domain categories.Domain) Category {
+	return Category{
 		ID:        domain.ID,
 		Name:      domain.Name,
 		CreatedAt: domain.CreatedAt,

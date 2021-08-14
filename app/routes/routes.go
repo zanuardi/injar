@@ -15,13 +15,21 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
+
+	//Auth ...
 	auth := e.Group("v1/api/auth")
+
 	auth.POST("/register", cl.UserController.Store)
 	auth.POST("/login", cl.UserController.Login)
 
+	//Categories ...
 	category := e.Group("v1/api/categories")
+	// category.Use(middleware.AddTrailingSlash())
+	category.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+
 	category.GET("", cl.CategoriesController.GetAll)
+	category.GET("/select", cl.CategoriesController.SelectAll)
 	category.POST("", cl.CategoriesController.Store)
-	category.POST("/:id", cl.CategoriesController.Update)
+	category.PUT("/id/:id", cl.CategoriesController.Update)
 
 }
