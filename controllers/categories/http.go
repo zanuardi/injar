@@ -56,6 +56,25 @@ func (ctrl *CategoryController) SelectAll(c echo.Context) error {
 	return controller.NewSuccessResponse(c, responseController)
 }
 
+func (ctrl *CategoryController) FindById(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	category, err := ctrl.categoryUsecase.GetByID(ctx, id)
+
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return controller.NewSuccessResponse(c, category)
+
+}
+
 func (ctrl *CategoryController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -89,6 +108,30 @@ func (ctrl *CategoryController) Update(c echo.Context) error {
 	idInt, _ := strconv.Atoi(id)
 	domainReq.ID = idInt
 	resp, err := ctrl.categoryUsecase.Update(ctx, domainReq)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controller.NewSuccessResponse(c, response.FromDomain(*resp))
+}
+
+func (ctrl *CategoryController) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id := c.Param("id")
+	if strings.TrimSpace(id) == "" {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, errors.New("missing required id"))
+	}
+
+	req := request.Categories{}
+	if err := c.Bind(&req); err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	domainReq := req.ToDomain()
+	idInt, _ := strconv.Atoi(id)
+	domainReq.ID = idInt
+	resp, err := ctrl.categoryUsecase.Delete(ctx, domainReq)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

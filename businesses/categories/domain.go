@@ -3,6 +3,8 @@ package categories
 import (
 	"context"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Domain struct {
@@ -10,7 +12,7 @@ type Domain struct {
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 type Usecase interface {
@@ -20,6 +22,7 @@ type Usecase interface {
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoryDomain *Domain) (Domain, error)
 	Update(ctx context.Context, newsDomain *Domain) (*Domain, error)
+	Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error)
 }
 
 type Repository interface {
@@ -29,4 +32,5 @@ type Repository interface {
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoriesDomain *Domain) (Domain, error)
 	Update(ctx context.Context, categoriesDomain *Domain) (Domain, error)
+	Delete(ctx context.Context, categoriesDomain *Domain) (Domain, error)
 }

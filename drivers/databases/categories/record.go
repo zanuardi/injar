@@ -4,6 +4,8 @@ import (
 	"injar/businesses/categories"
 	categoriesUsecase "injar/businesses/categories"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Categories struct {
@@ -11,7 +13,7 @@ type Categories struct {
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func (rec *Categories) toDomain() categories.Domain {

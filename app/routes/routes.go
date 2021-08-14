@@ -24,12 +24,13 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//Categories ...
 	category := e.Group("v1/api/categories")
-	// category.Use(middleware.AddTrailingSlash())
 	category.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	category.GET("", cl.CategoriesController.GetAll)
 	category.GET("/select", cl.CategoriesController.SelectAll)
+	category.GET("/id/:id", cl.CategoriesController.FindById)
 	category.POST("", cl.CategoriesController.Store)
 	category.PUT("/id/:id", cl.CategoriesController.Update)
+	category.DELETE("/id/:id", cl.CategoriesController.Delete)
 
 }

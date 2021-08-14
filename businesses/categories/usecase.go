@@ -27,7 +27,7 @@ func (cu *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Doma
 		page = 1
 	}
 	if perpage <= 0 {
-		perpage = 10
+		perpage = 25
 	}
 
 	res, total, err := cu.categoryRepository.Fetch(ctx, page, perpage)
@@ -86,13 +86,7 @@ func (cu *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (D
 		return Domain{}, businesses.ErrDuplicateData
 	}
 
-	// now := time.Now().UTC()
-	result := Domain{
-		Name:      categoryDomain.Name,
-		UpdatedAt: time.Now(),
-	}
-
-	result, err := cu.categoryRepository.Store(ctx, &result)
+	result, err := cu.categoryRepository.Store(ctx, &Domain{})
 	if err != nil {
 		return Domain{}, err
 	}
@@ -108,6 +102,21 @@ func (cu *categoryUsecase) Update(ctx context.Context, categoriesDomain *Domain)
 	categoriesDomain.ID = existedCategories.ID
 
 	result, err := cu.categoryRepository.Update(ctx, categoriesDomain)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	return &result, nil
+}
+
+func (cu *categoryUsecase) Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
+	existedCategories, err := cu.categoryRepository.GetByID(ctx, categoriesDomain.ID)
+	if err != nil {
+		return &Domain{}, err
+	}
+	categoriesDomain.ID = existedCategories.ID
+
+	result, err := cu.categoryRepository.Delete(ctx, categoriesDomain)
 	if err != nil {
 		return &Domain{}, err
 	}

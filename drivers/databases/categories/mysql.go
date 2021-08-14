@@ -22,39 +22,33 @@ func (cr *mysqlCategoriesRepository) Fetch(ctx context.Context, page, perpage in
 	rec := []Categories{}
 
 	offset := (page - 1) * perpage
-	err := cr.DB.Offset(offset).Limit(perpage).Find(&rec).Error
+	err := cr.DB.Find(&rec).Offset(offset).Limit(perpage).Error
 	if err != nil {
 		return []categories.Domain{}, 0, err
 	}
 
 	var totalData int64
-	err = cr.DB.Count(&totalData).Error
+	err = cr.DB.Model(&rec).Count(&totalData).Error
 	if err != nil {
 		return []categories.Domain{}, 0, err
 	}
+	fmt.Printf("%+v", err)
 
-	var categoriesDomain []categories.Domain
+	var domainCategory []categories.Domain
 	for _, value := range rec {
-		categoriesDomain = append(categoriesDomain, value.toDomain())
+		domainCategory = append(domainCategory, value.toDomain())
 	}
-	return categoriesDomain, int(totalData), nil
+	return domainCategory, int(totalData), nil
 }
 
 func (cr *mysqlCategoriesRepository) Find(ctx context.Context) ([]categories.Domain, error) {
 	rec := []Categories{}
 
-	// query := cr.Conn.Where("deleted_at = ?", nil)
-
-	// err := query.Find(&rec).Error
-	// if err != nil {
-	// 	return []categories.Domain{}, err
-	// }
-
+	cr.DB.Find(&rec)
 	categoryDomain := []categories.Domain{}
 	for _, value := range rec {
 		categoryDomain = append(categoryDomain, value.toDomain())
 	}
-	fmt.Println(categoryDomain)
 
 	return categoryDomain, nil
 }
@@ -80,7 +74,7 @@ func (nr *mysqlCategoriesRepository) GetByName(ctx context.Context, categoryName
 func (nr *mysqlCategoriesRepository) Store(ctx context.Context, categoriesDomain *categories.Domain) (categories.Domain, error) {
 	rec := fromDomain(categoriesDomain)
 
-	result := nr.DB.Create(&rec)
+	result := nr.DB.Select("Name", "CreatedAt").Create(&rec)
 	if result.Error != nil {
 		return categories.Domain{}, result.Error
 	}
