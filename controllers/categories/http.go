@@ -42,8 +42,9 @@ func (ctrl *CategoryController) GetAll(c echo.Context) error {
 
 func (ctrl *CategoryController) SelectAll(c echo.Context) error {
 	ctx := c.Request().Context()
+	page, _ := strconv.Atoi(c.QueryParam("page"))
 
-	resp, _, err := ctrl.categoryUsecase.Fetch(ctx, 10, 10)
+	resp, _, err := ctrl.categoryUsecase.Fetch(ctx, page, 10)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

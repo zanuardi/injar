@@ -2,7 +2,6 @@ package categories
 
 import (
 	"context"
-	"fmt"
 	"injar/businesses/categories"
 
 	"gorm.io/gorm"
@@ -32,7 +31,6 @@ func (cr *mysqlCategoriesRepository) Fetch(ctx context.Context, page, perpage in
 	if err != nil {
 		return []categories.Domain{}, 0, err
 	}
-	fmt.Printf("%+v", err)
 
 	var domainCategory []categories.Domain
 	for _, value := range rec {
