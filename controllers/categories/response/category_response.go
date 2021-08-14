@@ -1,7 +1,7 @@
 package response
 
 import (
-	"injar/businesses/categories"
+	"injar/usecase/categories"
 	"time"
 
 	"gorm.io/gorm"

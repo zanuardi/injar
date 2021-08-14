@@ -1,6 +1,6 @@
 package request
 
-import "injar/businesses/users"
+import "injar/usecase/users"
 
 type Users struct {
 	Name     string `json:"name"`

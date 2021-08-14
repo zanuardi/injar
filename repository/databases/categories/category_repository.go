@@ -2,7 +2,7 @@ package categories
 
 import (
 	"context"
-	"injar/businesses/categories"
+	"injar/usecase/categories"
 
 	"gorm.io/gorm"
 )

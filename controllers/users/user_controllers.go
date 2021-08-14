@@ -1,9 +1,9 @@
 package users
 
 import (
-	"injar/businesses/users"
 	controller "injar/controllers"
 	"injar/controllers/users/request"
+	"injar/usecase/users"
 	"net/http"
 
 	echo "github.com/labstack/echo/v4"

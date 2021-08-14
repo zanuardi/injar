@@ -1,8 +1,8 @@
 package categories
 
 import (
-	"injar/businesses/categories"
-	categoriesUsecase "injar/businesses/categories"
+	"injar/usecase/categories"
+	categoriesUsecase "injar/usecase/categories"
 	"time"
 
 	"gorm.io/gorm"

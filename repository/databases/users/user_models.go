@@ -1,7 +1,7 @@
 package users
 
 import (
-	"injar/businesses/users"
+	"injar/usecase/users"
 
 	"time"
 )

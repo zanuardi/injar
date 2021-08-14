@@ -3,8 +3,8 @@ package users
 import (
 	"context"
 	"injar/app/middleware"
-	"injar/businesses"
 	"injar/helpers/encrypt"
+	usecase "injar/usecase"
 	"strings"
 	"time"
 )
@@ -28,7 +28,7 @@ func (uc *userUsecase) CreateToken(ctx context.Context, username, password strin
 	defer cancel()
 
 	if strings.TrimSpace(username) == "" && strings.TrimSpace(password) == "" {
-		return "", businesses.ErrUsernamePasswordNotFound
+		return "", usecase.ErrUsernamePasswordNotFound
 	}
 
 	userDomain, err := uc.userRepository.GetByUsername(ctx, username)
@@ -37,7 +37,7 @@ func (uc *userUsecase) CreateToken(ctx context.Context, username, password strin
 	}
 
 	if !encrypt.ValidateHash(password, userDomain.Password) {
-		return "", businesses.ErrInternalServer
+		return "", usecase.ErrInternalServer
 	}
 
 	token := uc.jwtAuth.GenerateToken(userDomain.Id)
@@ -55,12 +55,12 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 		}
 	}
 	if existedUser != (Domain{}) {
-		return businesses.ErrDuplicateData
+		return usecase.ErrDuplicateData
 	}
 
 	userDomain.Password, err = encrypt.Hash(userDomain.Password)
 	if err != nil {
-		return businesses.ErrInternalServer
+		return usecase.ErrInternalServer
 	}
 	err = uc.userRepository.Store(ctx, userDomain)
 	if err != nil {

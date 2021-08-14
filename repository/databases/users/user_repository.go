@@ -2,7 +2,7 @@ package users
 
 import (
 	"context"
-	"injar/businesses/users"
+	"injar/usecase/users"
 
 	"gorm.io/gorm"
 )

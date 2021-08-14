@@ -1,7 +1,7 @@
 package request
 
 import (
-	"injar/businesses/categories"
+	"injar/usecase/categories"
 )
 
 type Categories struct {

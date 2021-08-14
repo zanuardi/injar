@@ -3,15 +3,15 @@ package main
 import (
 	_middleware "injar/app/middleware"
 	_routes "injar/app/routes"
-	_userUsecase "injar/businesses/users"
 	_userController "injar/controllers/users"
-	_userRepo "injar/drivers/databases/users"
+	_userRepo "injar/repository/databases/users"
+	_userUsecase "injar/usecase/users"
 
-	_categoriesUsecase "injar/businesses/categories"
 	_categoriesController "injar/controllers/categories"
-	_categoriesRepo "injar/drivers/databases/categories"
+	_categoriesRepo "injar/repository/databases/categories"
+	_categoriesUsecase "injar/usecase/categories"
 
-	_dbDriver "injar/drivers/mysql"
+	_dbDriver "injar/repository/mysql"
 
 	"log"
 	"time"

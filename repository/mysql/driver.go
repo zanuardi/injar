@@ -2,8 +2,8 @@ package mysql
 
 import (
 	"fmt"
-	categoriesRepo "injar/drivers/databases/categories"
-	usersRepo "injar/drivers/databases/users"
+	categoriesRepo "injar/repository/databases/categories"
+	usersRepo "injar/repository/databases/users"
 
 	"log"
 

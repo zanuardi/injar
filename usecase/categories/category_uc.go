@@ -2,7 +2,7 @@ package categories
 
 import (
 	"context"
-	"injar/businesses"
+	usecase "injar/usecase"
 	"strings"
 	"time"
 )
@@ -51,7 +51,7 @@ func (cu *categoryUsecase) GetByID(ctx context.Context, categoryID int) (Domain,
 	defer cancel()
 
 	if categoryID <= 0 {
-		return Domain{}, businesses.ErrCategoryNotFound
+		return Domain{}, usecase.ErrCategoryNotFound
 	}
 	res, err := cu.categoryRepository.GetByID(ctx, categoryID)
 	if err != nil {
@@ -66,7 +66,7 @@ func (cu *categoryUsecase) GetByName(ctx context.Context, categoryName string) (
 	defer cancel()
 
 	if strings.TrimSpace(categoryName) == "" {
-		return Domain{}, businesses.ErrCategoryNotFound
+		return Domain{}, usecase.ErrCategoryNotFound
 	}
 	res, err := cu.categoryRepository.GetByName(ctx, categoryName)
 	if err != nil {
@@ -83,10 +83,10 @@ func (cu *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (D
 	existedCategories, _ := cu.categoryRepository.GetByName(ctx, categoryDomain.Name)
 
 	if existedCategories != (Domain{}) {
-		return Domain{}, businesses.ErrDuplicateData
+		return Domain{}, usecase.ErrDuplicateData
 	}
 
-	result, err := cu.categoryRepository.Store(ctx, &Domain{})
+	result, err := cu.categoryRepository.Store(ctx, categoryDomain)
 	if err != nil {
 		return Domain{}, err
 	}

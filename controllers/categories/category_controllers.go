@@ -2,9 +2,9 @@ package categories
 
 import (
 	"errors"
-	"injar/businesses/categories"
 	"injar/controllers/categories/request"
 	"injar/controllers/categories/response"
+	"injar/usecase/categories"
 	"net/http"
 	"strconv"
 	"strings"
