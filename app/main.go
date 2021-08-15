@@ -11,6 +11,10 @@ import (
 	_categoriesRepo "injar/repository/databases/categories"
 	_categoriesUsecase "injar/usecase/categories"
 
+	_webinarsController "injar/controllers/webinars"
+	_webinarsRepo "injar/repository/databases/webinars"
+	_webinarsUsecase "injar/usecase/webinars"
+
 	_dbDriver "injar/repository/mysql"
 
 	"log"
@@ -62,10 +66,16 @@ func main() {
 	categoriesUsecase := _categoriesUsecase.NewCategoryUsecase(timeoutContext, categoriesRepo)
 	categoriesCtrl := _categoriesController.NewCategoryController(categoriesUsecase)
 
+	// Webinars ...
+	webinarsRepo := _webinarsRepo.NewMySQLWebinarRepository(db)
+	webinarsUsecase := _webinarsUsecase.NewWebinarUsecase(timeoutContext, webinarsRepo)
+	webinarsCtrl := _webinarsController.NewWebinarController(webinarsUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:        configJWT.Init(),
 		UserController:       *userCtrl,
 		CategoriesController: *categoriesCtrl,
+		WebinarController:    *webinarsCtrl,
 	}
 	routesInit.RouteRegister(e)
 

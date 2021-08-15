@@ -4,6 +4,7 @@ import (
 	"fmt"
 	categoriesRepo "injar/repository/databases/categories"
 	usersRepo "injar/repository/databases/users"
+	webinarsRepo "injar/repository/databases/webinars"
 
 	"log"
 
@@ -35,6 +36,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 	db.AutoMigrate(
 		&usersRepo.Users{},
 		&categoriesRepo.Categories{},
+		&webinarsRepo.Webinars{},
 	)
 
 	return db
