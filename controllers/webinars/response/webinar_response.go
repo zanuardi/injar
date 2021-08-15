@@ -25,10 +25,9 @@ type Webinar struct {
 
 func FromDomain(domain webinars.Domain) Webinar {
 	return Webinar{
-		ID:         domain.ID,
-		UserID:     domain.UserID,
-		CategoryID: domain.CategoryID,
-		// Categories:  domain.Categories,
+		ID:          domain.ID,
+		UserID:      domain.UserID,
+		CategoryID:  domain.CategoryID,
 		ImageUrl:    domain.ImageUrl,
 		Name:        domain.Name,
 		Description: domain.Description,

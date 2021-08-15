@@ -19,7 +19,7 @@ type Users struct {
 
 func (rec *Users) toDomain() users.Domain {
 	return users.Domain{
-		Id:        rec.ID,
+		ID:        rec.ID,
 		Name:      rec.Name,
 		Email:     rec.Email,
 		Username:  rec.Username,
@@ -32,7 +32,7 @@ func (rec *Users) toDomain() users.Domain {
 
 func fromDomain(userDomain users.Domain) *Users {
 	return &Users{
-		ID:        userDomain.Id,
+		ID:        userDomain.ID,
 		Name:      userDomain.Name,
 		Email:     userDomain.Email,
 		Username:  userDomain.Username,

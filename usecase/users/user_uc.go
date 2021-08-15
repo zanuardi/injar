@@ -40,7 +40,7 @@ func (uc *userUsecase) CreateToken(ctx context.Context, username, password strin
 		return "", usecase.ErrInternalServer
 	}
 
-	token := uc.jwtAuth.GenerateToken(userDomain.Id)
+	token := uc.jwtAuth.GenerateToken(userDomain.ID)
 	return token, nil
 }
 
