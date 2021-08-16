@@ -2,6 +2,7 @@ package routes
 
 import (
 	"injar/controllers/categories"
+	"injar/controllers/favourites"
 	"injar/controllers/users"
 	"injar/controllers/webinars"
 
@@ -14,6 +15,7 @@ type ControllerList struct {
 	UserController       users.UserController
 	CategoriesController categories.CategoryController
 	WebinarController    webinars.WebinarController
+	FavouritesController favourites.FavouritesController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -49,5 +51,14 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	webinar.POST("", cl.WebinarController.Store)
 	webinar.PUT("/id/:id", cl.WebinarController.Update)
 	webinar.DELETE("/id/:id", cl.WebinarController.Delete)
+
+	//Favourites ...
+	favourites := e.Group("v1/api/favourites")
+	favourites.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	favourites.GET("/user/:id", cl.FavouritesController.GetByUserID)
+	favourites.GET("/id/:id", cl.FavouritesController.GetById)
+	favourites.POST("", cl.FavouritesController.Store)
+	favourites.DELETE("/id/:id", cl.FavouritesController.Delete)
 
 }
