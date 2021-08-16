@@ -56,7 +56,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	favourites := e.Group("v1/api/favourites")
 	favourites.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
-	favourites.GET("/user/:id", cl.FavouritesController.GetByUserID)
+	favourites.GET("/user/:user_id", cl.FavouritesController.GetByUserID)
 	favourites.GET("/id/:id", cl.FavouritesController.GetById)
 	favourites.POST("", cl.FavouritesController.Store)
 	favourites.DELETE("/id/:id", cl.FavouritesController.Delete)
