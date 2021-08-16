@@ -69,3 +69,18 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 
 	return nil
 }
+
+func (uc *userUsecase) GetByID(ctx context.Context, ID int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
+	defer cancel()
+
+	if ID <= 0 {
+		return Domain{}, usecase.ErrNotFound
+	}
+	res, err := uc.userRepository.GetByID(ctx, ID)
+	if err != nil {
+		return Domain{}, err
+	}
+
+	return res, nil
+}

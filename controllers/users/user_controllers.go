@@ -5,6 +5,7 @@ import (
 	"injar/controllers/users/request"
 	"injar/usecase/users"
 	"net/http"
+	"strconv"
 
 	echo "github.com/labstack/echo/v4"
 )
@@ -55,20 +56,20 @@ func (ctrl *UserController) Login(c echo.Context) error {
 	return controller.NewSuccessResponse(c, response)
 }
 
-func (ctrl *UserController) CreateToken(c echo.Context) error {
+func (ctrl *UserController) FindById(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	username := c.QueryParam("username")
-	password := c.QueryParam("password")
+	id, err := strconv.Atoi(c.Param("id"))
 
-	token, err := ctrl.userUseCase.CreateToken(ctx, username, password)
 	if err != nil {
-		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	response := struct {
-		Token string `json:"token"`
-	}{Token: token}
+	user, err := ctrl.userUseCase.GetByID(ctx, id)
 
-	return controller.NewSuccessResponse(c, response)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return controller.NewSuccessResponse(c, user)
 }

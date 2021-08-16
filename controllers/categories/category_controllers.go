@@ -73,7 +73,6 @@ func (ctrl *CategoryController) FindById(c echo.Context) error {
 	}
 
 	return controller.NewSuccessResponse(c, category)
-
 }
 
 func (ctrl *CategoryController) Store(c echo.Context) error {
