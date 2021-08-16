@@ -24,6 +24,12 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.POST("/register", cl.UserController.Store)
 	auth.POST("/login", cl.UserController.Login)
 
+	//Users ...
+	user := e.Group("v1/api/users")
+	user.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	user.GET("/id/:id", cl.UserController.FindById)
+
 	//Categories ...
 	category := e.Group("v1/api/categories")
 	category.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
