@@ -3,6 +3,7 @@ package routes
 import (
 	"injar/controllers/categories"
 	"injar/controllers/favourites"
+	"injar/controllers/transactions"
 	"injar/controllers/users"
 	"injar/controllers/webinars"
 
@@ -11,11 +12,12 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware        middleware.JWTConfig
-	UserController       users.UserController
-	CategoriesController categories.CategoryController
-	WebinarController    webinars.WebinarController
-	FavouritesController favourites.FavouritesController
+	JWTMiddleware          middleware.JWTConfig
+	UserController         users.UserController
+	CategoriesController   categories.CategoryController
+	WebinarController      webinars.WebinarController
+	FavouritesController   favourites.FavouritesController
+	TransactionsController transactions.TransactionsController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -61,5 +63,14 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	favourites.GET("/id/:id", cl.FavouritesController.GetById)
 	favourites.POST("", cl.FavouritesController.Store)
 	favourites.DELETE("/id/:id", cl.FavouritesController.Delete)
+
+	//transactions ...
+	transactions := e.Group("v1/api/transactions")
+	transactions.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	transactions.GET("/user/:user_id", cl.TransactionsController.GetByUserID)
+	transactions.GET("/id/:id", cl.TransactionsController.GetById)
+	transactions.POST("", cl.TransactionsController.Store)
+	transactions.DELETE("/id/:id", cl.TransactionsController.Delete)
 
 }
