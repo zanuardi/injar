@@ -80,12 +80,11 @@ func (ctrl *UserController) FindByToken(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	user, err := ctrl.jwtAuth.GetUser(c)
-
-	id, err := ctrl.userUseCase.GetByID(ctx, user.ID)
-
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
+
+	id, err := ctrl.userUseCase.GetByID(ctx, user.ID)
 
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
