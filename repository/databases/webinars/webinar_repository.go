@@ -33,9 +33,36 @@ func (repo *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]
 	return webinarDomain, nil
 }
 
+func (repo *mysqlWebinarRepository) FindAll(ctx context.Context, name, category string, page, perpage int) ([]webinars.Domain, int, error) {
+	rec := []Webinars{}
+	var whereStatement string
+
+	if category != "" {
+		whereStatement += category
+	}
+
+	offset := (page - 1) * perpage
+	err := repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Offset(offset).Limit(perpage).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var totalData int64
+	err = repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Count(&totalData).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var domainCategory []webinars.Domain
+	for _, value := range rec {
+		domainCategory = append(domainCategory, value.toDomain())
+	}
+	return domainCategory, int(totalData), nil
+}
+
 func (repo *mysqlWebinarRepository) GetByID(ctx context.Context, ID int) (webinars.Domain, error) {
 	rec := Webinars{}
-	err := repo.DB.Preload("Categories").Where("webinars.id = ?", ID).First(&rec).Error
+	err := repo.DB.Joins("Categories").Where("webinars.id = ?", ID).First(&rec).Error
 	if err != nil {
 		return webinars.Domain{}, err
 	}

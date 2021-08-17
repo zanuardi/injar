@@ -17,12 +17,19 @@ func NewMySQLTransactionsRepository(conn *gorm.DB) transactions.Repository {
 	}
 }
 
-func (repo *mysqlTransactionsRepository) GetByUserID(ctx context.Context, userID int) ([]transactions.Domain, error) {
+func (repo *mysqlTransactionsRepository) GetByUserID(ctx context.Context, page, perpage, userID int) ([]transactions.Domain, int, error) {
 	rec := []Transactions{}
 
-	err := repo.DB.Joins("Users").Joins("Webinars").Where("transactions.user_id = ?", userID).Find(&rec).Error
+	offset := (page - 1) * perpage
+	err := repo.DB.Joins("Users").Joins("Webinars").Where("transactions.user_id = ?", userID).Find(&rec).Offset(offset).Limit(perpage).Error
 	if err != nil {
-		return []transactions.Domain{}, err
+		return []transactions.Domain{}, 0, err
+	}
+
+	var totalData int64
+	err = repo.DB.Model(&rec).Where("transactions.user_id = ?", userID).Count(&totalData).Error
+	if err != nil {
+		return []transactions.Domain{}, 0, err
 	}
 
 	tranasctionDomain := []transactions.Domain{}
@@ -30,7 +37,7 @@ func (repo *mysqlTransactionsRepository) GetByUserID(ctx context.Context, userID
 		tranasctionDomain = append(tranasctionDomain, value.toDomain())
 	}
 
-	return tranasctionDomain, nil
+	return tranasctionDomain, int(totalData), nil
 }
 
 func (repo *mysqlTransactionsRepository) GetByID(ctx context.Context, ID int) (transactions.Domain, error) {

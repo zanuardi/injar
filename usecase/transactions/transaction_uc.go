@@ -18,12 +18,22 @@ func NewTransactionsUsecase(timeout time.Duration, cr Repository) Usecase {
 	}
 }
 
-func (uc *transactionsUsecase) GetByUserID(ctx context.Context, UserID int) ([]Domain, error) {
-	resp, err := uc.transactionsRepository.GetByUserID(ctx, UserID)
-	if err != nil {
-		return []Domain{}, err
+func (uc *transactionsUsecase) GetByUserID(ctx context.Context, page, perpage, UserID int) ([]Domain, int, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
+	defer cancel()
+
+	if page <= 0 {
+		page = 1
 	}
-	return resp, nil
+	if perpage <= 0 {
+		perpage = 25
+	}
+
+	resp, total, err := uc.transactionsRepository.GetByUserID(ctx, page, perpage, UserID)
+	if err != nil {
+		return []Domain{}, 0, err
+	}
+	return resp, total, nil
 }
 
 func (uc *transactionsUsecase) GetByID(ctx context.Context, ID int) (Domain, error) {

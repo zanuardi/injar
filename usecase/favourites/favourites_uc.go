@@ -18,12 +18,22 @@ func NewFavouritesUsecase(timeout time.Duration, cr Repository) Usecase {
 	}
 }
 
-func (uc *favouritesUsecase) GetByUserID(ctx context.Context, UserID int) ([]Domain, error) {
-	resp, err := uc.favouritesRepository.GetByUserID(ctx, UserID)
-	if err != nil {
-		return []Domain{}, err
+func (uc *favouritesUsecase) GetByUserID(ctx context.Context, UserID, page, perpage int) ([]Domain, int, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
+	defer cancel()
+
+	if page <= 0 {
+		page = 1
 	}
-	return resp, nil
+	if perpage <= 0 {
+		perpage = 25
+	}
+
+	resp, total, err := uc.favouritesRepository.GetByUserID(ctx, UserID, page, perpage)
+	if err != nil {
+		return []Domain{}, 0, err
+	}
+	return resp, total, nil
 }
 
 func (uc *favouritesUsecase) GetByID(ctx context.Context, ID int) (Domain, error) {

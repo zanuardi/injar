@@ -24,7 +24,7 @@ func NewWebinarController(cu webinars.Usecase) *WebinarController {
 	}
 }
 
-func (ctrl *WebinarController) GetAll(c echo.Context) error {
+func (ctrl *WebinarController) SelectAll(c echo.Context) error {
 	ctx := c.Request().Context()
 	webinarName := c.QueryParam("search")
 
@@ -39,6 +39,35 @@ func (ctrl *WebinarController) GetAll(c echo.Context) error {
 	}
 
 	return controller.NewSuccessResponse(c, responseController)
+}
+
+func (ctrl *WebinarController) FindAll(c echo.Context) error {
+	ctx := c.Request().Context()
+	name := c.QueryParam("search")
+	category := c.QueryParam("category")
+
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page <= 0 {
+		page = 1
+	}
+	if limit <= 0 || limit > 50 {
+		limit = 10
+	}
+
+	resp, total, err := ctrl.webinarUC.FindAll(ctx, name, category, page, limit)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	responseController := []response.Webinars{}
+	for _, value := range resp {
+		responseController = append(responseController, response.FromDomain(value))
+	}
+
+	pagination := controller.PaginationRes(page, total, limit)
+	return controller.NewSuccessResponsePagination(c, responseController, pagination)
 }
 
 func (ctrl *WebinarController) FindById(c echo.Context) error {

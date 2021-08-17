@@ -20,14 +20,14 @@ type Domain struct {
 }
 
 type Usecase interface {
-	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
+	GetByUserID(ctx context.Context, userID, page, limit int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	Store(ctx context.Context, favouriteDomain *Domain) (Domain, error)
 	Delete(ctx context.Context, favouriteDomain *Domain) (*Domain, error)
 }
 
 type Repository interface {
-	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
+	GetByUserID(ctx context.Context, userID, page, limit int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	Store(ctx context.Context, favouriteDomain *Domain) (Domain, error)
 	Delete(ctx context.Context, favouriteDomain *Domain) (Domain, error)

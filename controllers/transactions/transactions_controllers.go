@@ -33,7 +33,17 @@ func (ctrl *TransactionsController) GetByUserID(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	resp, err := ctrl.TransactionsUC.GetByUserID(ctx, user.ID)
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page <= 0 {
+		page = 1
+	}
+	if limit <= 0 || limit > 50 {
+		limit = 10
+	}
+
+	resp, total, err := ctrl.TransactionsUC.GetByUserID(ctx, page, limit, user.ID)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -43,7 +53,8 @@ func (ctrl *TransactionsController) GetByUserID(c echo.Context) error {
 		responseController = append(responseController, response.FromDomain(value))
 	}
 
-	return controller.NewSuccessResponse(c, responseController)
+	pagination := controller.PaginationRes(page, total, limit)
+	return controller.NewSuccessResponsePagination(c, responseController, pagination)
 }
 
 func (ctrl *TransactionsController) GetById(c echo.Context) error {
