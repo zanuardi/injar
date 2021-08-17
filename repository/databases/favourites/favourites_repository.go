@@ -20,9 +20,9 @@ func NewMySQLFavouritesRepository(conn *gorm.DB) favourites.Repository {
 func (repo *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID int) ([]favourites.Domain, error) {
 	rec := []Favourites{}
 
-	err := repo.DB.Joins("Users").Joins("Webinars").Where("favourites.user_id = ?", userID).Find(&rec).Error
-	if err != nil {
-		return []favourites.Domain{}, err
+	db := repo.DB.Preload("Webinars").Preload("Users").Where("favourites.user_id = ?", userID).Find(&rec)
+	if db.Error != nil {
+		return []favourites.Domain{}, db.Error
 	}
 
 	favouriteDomain := []favourites.Domain{}

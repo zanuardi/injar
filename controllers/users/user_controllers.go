@@ -66,13 +66,13 @@ func (ctrl *UserController) FindByToken(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	id, err := ctrl.userUsecase.GetByID(ctx, user.ID)
+	res, err := ctrl.userUsecase.GetByID(ctx, user.ID)
 
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, id)
+	return controller.NewSuccessResponse(c, response.FromDomain(res))
 }
 
 func (ctrl *UserController) Update(c echo.Context) error {

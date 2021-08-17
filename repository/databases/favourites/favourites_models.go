@@ -21,17 +21,6 @@ type Favourites struct {
 	DeletedAt gorm.DeletedAt
 }
 
-func (rec *Favourites) toDomain() favourites.Domain {
-	return favourites.Domain{
-		ID:        rec.ID,
-		UserID:    rec.UserID,
-		WebinarID: rec.WebinarID,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
-		DeletedAt: rec.DeletedAt,
-	}
-}
-
 func fromDomain(favouritesDomain favourites.Domain) *Favourites {
 	return &Favourites{
 		ID:        favouritesDomain.ID,
@@ -40,5 +29,17 @@ func fromDomain(favouritesDomain favourites.Domain) *Favourites {
 		CreatedAt: favouritesDomain.CreatedAt,
 		UpdatedAt: favouritesDomain.UpdatedAt,
 		DeletedAt: favouritesDomain.DeletedAt,
+	}
+}
+
+func (rec *Favourites) toDomain() favourites.Domain {
+	return favourites.Domain{
+		ID:          rec.ID,
+		UserID:      rec.UserID,
+		WebinarID:   rec.WebinarID,
+		WebinarName: rec.Webinars.Name,
+		CreatedAt:   rec.CreatedAt,
+		UpdatedAt:   rec.UpdatedAt,
+		DeletedAt:   rec.DeletedAt,
 	}
 }

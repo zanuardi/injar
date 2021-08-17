@@ -2,6 +2,7 @@ package favourites
 
 import (
 	"errors"
+	"injar/app/middleware"
 	"injar/controllers/favourites/request"
 	"injar/controllers/favourites/response"
 	"injar/usecase/favourites"
@@ -16,6 +17,7 @@ import (
 
 type FavouritesController struct {
 	FavouritesUC favourites.Usecase
+	jwtAuth      *middleware.ConfigJWT
 }
 
 func NewFavouritesController(uc favourites.Usecase) *FavouritesController {
@@ -26,9 +28,11 @@ func NewFavouritesController(uc favourites.Usecase) *FavouritesController {
 
 func (ctrl *FavouritesController) GetByUserID(c echo.Context) error {
 	ctx := c.Request().Context()
-	userID, err := strconv.Atoi(c.Param("user_id"))
-
-	resp, err := ctrl.FavouritesUC.GetByUserID(ctx, userID)
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	resp, err := ctrl.FavouritesUC.GetByUserID(ctx, user.ID)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -56,19 +60,26 @@ func (ctrl *FavouritesController) GetById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, favourite)
+	return controller.NewSuccessResponse(c, response.FromDomain(favourite))
 
 }
 
 func (ctrl *FavouritesController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
 	req := request.Favourites{}
 	if err := c.Bind(&req); err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	resp, err := ctrl.FavouritesUC.Store(ctx, req.ToDomain())
+	domainReq := req.ToDomain()
+	domainReq.UserID = user.ID
+	resp, err := ctrl.FavouritesUC.Store(ctx, domainReq)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

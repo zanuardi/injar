@@ -59,7 +59,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	favourites := e.Group("v1/api/favourites")
 	favourites.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
-	favourites.GET("/user/:user_id", cl.FavouritesController.GetByUserID)
+	favourites.GET("", cl.FavouritesController.GetByUserID)
 	favourites.GET("/id/:id", cl.FavouritesController.GetById)
 	favourites.POST("", cl.FavouritesController.Store)
 	favourites.DELETE("/id/:id", cl.FavouritesController.Delete)
@@ -68,7 +68,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	transactions := e.Group("v1/api/transactions")
 	transactions.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
-	transactions.GET("/user/:user_id", cl.TransactionsController.GetByUserID)
+	transactions.GET("", cl.TransactionsController.GetByUserID)
 	transactions.GET("/id/:id", cl.TransactionsController.GetById)
 	transactions.POST("", cl.TransactionsController.Store)
 	transactions.DELETE("/id/:id", cl.TransactionsController.Delete)

@@ -2,6 +2,7 @@ package favourites
 
 import (
 	"context"
+	"injar/repository/databases/users"
 	"time"
 
 	"gorm.io/gorm"
@@ -10,7 +11,7 @@ import (
 type Domain struct {
 	ID          int
 	UserID      int
-	Username    string
+	Users       users.Users
 	WebinarID   int
 	WebinarName string
 	CreatedAt   time.Time
