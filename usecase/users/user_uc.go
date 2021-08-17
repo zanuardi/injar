@@ -40,7 +40,7 @@ func (uc *userUsecase) CreateToken(ctx context.Context, username, password strin
 		return "", usecase.ErrInternalServer
 	}
 
-	token := uc.jwtAuth.GenerateToken(userDomain.Id)
+	token := uc.jwtAuth.GenerateToken(userDomain.ID)
 	return token, nil
 }
 
@@ -83,4 +83,19 @@ func (uc *userUsecase) GetByID(ctx context.Context, ID int) (Domain, error) {
 	}
 
 	return res, nil
+}
+
+func (cu *userUsecase) Update(ctx context.Context, usersDomain *Domain) (*Domain, error) {
+	existedUsers, err := cu.userRepository.GetByID(ctx, usersDomain.ID)
+	if err != nil {
+		return &Domain{}, err
+	}
+	usersDomain.ID = existedUsers.ID
+
+	result, err := cu.userRepository.Update(ctx, usersDomain)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	return &result, nil
 }
