@@ -30,6 +30,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	user := e.Group("v1/api/users")
 	user.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
+	user.GET("", cl.UserController.FindByToken)
 	user.GET("/id/:id", cl.UserController.FindById)
 
 	//Categories ...
