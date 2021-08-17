@@ -31,7 +31,7 @@ func (uc *favouritesUsecase) GetByID(ctx context.Context, ID int) (Domain, error
 	defer cancel()
 
 	if ID <= 0 {
-		return Domain{}, usecase.ErrCategoryNotFound
+		return Domain{}, usecase.ErrNotFound
 	}
 	res, err := uc.favouritesRepository.GetByID(ctx, ID)
 	if err != nil {
@@ -45,9 +45,9 @@ func (uc *favouritesUsecase) Store(ctx context.Context, favouriteDomain *Domain)
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
-	existedCategories, _ := uc.favouritesRepository.GetByID(ctx, favouriteDomain.ID)
+	existedFavourites, _ := uc.favouritesRepository.GetByID(ctx, favouriteDomain.ID)
 
-	if existedCategories != (Domain{}) {
+	if existedFavourites != (Domain{}) {
 		return Domain{}, usecase.ErrDuplicateData
 	}
 
@@ -59,14 +59,14 @@ func (uc *favouritesUsecase) Store(ctx context.Context, favouriteDomain *Domain)
 	return result, nil
 }
 
-func (uc *favouritesUsecase) Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
-	existedCategories, err := uc.favouritesRepository.GetByID(ctx, categoriesDomain.ID)
+func (uc *favouritesUsecase) Delete(ctx context.Context, favouritesDomain *Domain) (*Domain, error) {
+	existedFavourites, err := uc.favouritesRepository.GetByID(ctx, favouritesDomain.ID)
 	if err != nil {
 		return &Domain{}, err
 	}
-	categoriesDomain.ID = existedCategories.ID
+	favouritesDomain.ID = existedFavourites.ID
 
-	result, err := uc.favouritesRepository.Delete(ctx, categoriesDomain)
+	result, err := uc.favouritesRepository.Delete(ctx, favouritesDomain)
 	if err != nil {
 		return &Domain{}, err
 	}

@@ -17,10 +17,10 @@ func NewMySQLFavouritesRepository(conn *gorm.DB) favourites.Repository {
 	}
 }
 
-func (cr *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID int) ([]favourites.Domain, error) {
+func (repo *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID int) ([]favourites.Domain, error) {
 	rec := []Favourites{}
 
-	err := cr.DB.Joins("Users").Joins("Webinars").Where("favourites.user_id = ?", userID).Find(&rec).Error
+	err := repo.DB.Joins("Users").Joins("Webinars").Where("favourites.user_id = ?", userID).Find(&rec).Error
 	if err != nil {
 		return []favourites.Domain{}, err
 	}
@@ -33,19 +33,19 @@ func (cr *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID int
 	return favouriteDomain, nil
 }
 
-func (cr *mysqlFavouritesRepository) GetByID(ctx context.Context, ID int) (favourites.Domain, error) {
+func (repo *mysqlFavouritesRepository) GetByID(ctx context.Context, ID int) (favourites.Domain, error) {
 	rec := Favourites{}
-	err := cr.DB.Joins("Users").Joins("Webinars").Where("favourites.id = ?", ID).First(&rec).Error
+	err := repo.DB.Joins("Users").Joins("Webinars").Where("favourites.id = ?", ID).First(&rec).Error
 	if err != nil {
 		return favourites.Domain{}, err
 	}
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlFavouritesRepository) Store(ctx context.Context, favouritesDomain *favourites.Domain) (favourites.Domain, error) {
+func (repo *mysqlFavouritesRepository) Store(ctx context.Context, favouritesDomain *favourites.Domain) (favourites.Domain, error) {
 	rec := fromDomain(*favouritesDomain)
 
-	result := nr.DB.Create(&rec)
+	result := repo.DB.Create(&rec)
 	if result.Error != nil {
 		return favourites.Domain{}, result.Error
 	}
@@ -53,10 +53,10 @@ func (nr *mysqlFavouritesRepository) Store(ctx context.Context, favouritesDomain
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlFavouritesRepository) Delete(ctx context.Context, favouritesDomain *favourites.Domain) (favourites.Domain, error) {
+func (repo *mysqlFavouritesRepository) Delete(ctx context.Context, favouritesDomain *favourites.Domain) (favourites.Domain, error) {
 	rec := fromDomain(*favouritesDomain)
 
-	result := nr.DB.Delete(rec)
+	result := repo.DB.Delete(rec)
 
 	if result.Error != nil {
 		return favourites.Domain{}, result.Error

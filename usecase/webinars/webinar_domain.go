@@ -2,6 +2,7 @@ package webinars
 
 import (
 	"context"
+	"injar/repository/databases/categories"
 	"time"
 
 	"gorm.io/gorm"
@@ -11,6 +12,7 @@ type Domain struct {
 	ID           int
 	UserID       int
 	CategoryID   int
+	Categories   categories.Categories
 	CategoryName string
 	ImageUrl     string
 	Name         string
