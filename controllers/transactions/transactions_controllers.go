@@ -2,6 +2,7 @@ package transactions
 
 import (
 	"errors"
+	"injar/app/middleware"
 	"injar/controllers/transactions/request"
 	"injar/controllers/transactions/response"
 	"injar/usecase/transactions"
@@ -16,6 +17,7 @@ import (
 
 type TransactionsController struct {
 	TransactionsUC transactions.Usecase
+	jwtAuth        *middleware.ConfigJWT
 }
 
 func NewTransactionsController(uc transactions.Usecase) *TransactionsController {
@@ -26,9 +28,12 @@ func NewTransactionsController(uc transactions.Usecase) *TransactionsController 
 
 func (ctrl *TransactionsController) GetByUserID(c echo.Context) error {
 	ctx := c.Request().Context()
-	userID, err := strconv.Atoi(c.Param("user_id"))
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
 
-	resp, err := ctrl.TransactionsUC.GetByUserID(ctx, userID)
+	resp, err := ctrl.TransactionsUC.GetByUserID(ctx, user.ID)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -56,19 +61,25 @@ func (ctrl *TransactionsController) GetById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, favourite)
+	return controller.NewSuccessResponse(c, response.FromDomain(favourite))
 
 }
 
 func (ctrl *TransactionsController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
 	req := request.Transactions{}
 	if err := c.Bind(&req); err != nil {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	resp, err := ctrl.TransactionsUC.Store(ctx, req.ToDomain())
+	domainReq := req.ToDomain()
+	domainReq.UserID = user.ID
+	resp, err := ctrl.TransactionsUC.Store(ctx, domainReq)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

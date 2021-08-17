@@ -33,7 +33,7 @@ func (ctrl *WebinarController) GetAll(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	responseController := []response.Webinar{}
+	responseController := []response.Webinars{}
 	for _, value := range resp {
 		responseController = append(responseController, response.FromDomain(value))
 	}
@@ -56,7 +56,7 @@ func (ctrl *WebinarController) FindById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, Webinar)
+	return controller.NewSuccessResponse(c, response.FromDomain(Webinar))
 
 }
 

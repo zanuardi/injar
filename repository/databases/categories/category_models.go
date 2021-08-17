@@ -9,11 +9,11 @@ import (
 )
 
 type Categories struct {
-	ID        int            `json:"id"`
-	Name      string         `json:"name"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	ID        int
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func (rec *Categories) toDomain() categories.Domain {

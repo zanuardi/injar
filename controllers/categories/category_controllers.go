@@ -72,7 +72,7 @@ func (ctrl *CategoryController) FindById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, category)
+	return controller.NewSuccessResponse(c, response.FromDomain(category))
 }
 
 func (ctrl *CategoryController) Store(c echo.Context) error {

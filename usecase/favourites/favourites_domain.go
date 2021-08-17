@@ -3,21 +3,20 @@ package favourites
 import (
 	"context"
 	"injar/repository/databases/users"
-	"injar/repository/databases/webinars"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type Domain struct {
-	ID        int
-	UserID    int
-	Users     users.Users
-	WebinarID int
-	Webinars  webinars.Webinars
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	ID          int
+	UserID      int
+	Users       users.Users
+	WebinarID   int
+	WebinarName string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   gorm.DeletedAt
 }
 
 type Usecase interface {

@@ -68,7 +68,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	transactions := e.Group("v1/api/transactions")
 	transactions.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
-	transactions.GET("/user/:user_id", cl.TransactionsController.GetByUserID)
+	transactions.GET("", cl.TransactionsController.GetByUserID)
 	transactions.GET("/id/:id", cl.TransactionsController.GetById)
 	transactions.POST("", cl.TransactionsController.Store)
 	transactions.DELETE("/id/:id", cl.TransactionsController.Delete)

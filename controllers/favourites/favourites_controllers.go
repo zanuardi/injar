@@ -60,7 +60,7 @@ func (ctrl *FavouritesController) GetById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, favourite)
+	return controller.NewSuccessResponse(c, response.FromDomain(favourite))
 
 }
 

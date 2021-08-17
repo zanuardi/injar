@@ -24,13 +24,14 @@ type Transactions struct {
 
 func (rec *Transactions) toDomain() transactions.Domain {
 	return transactions.Domain{
-		ID:        rec.ID,
-		UserID:    rec.UserID,
-		WebinarID: rec.WebinarID,
-		Status:    rec.Status,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
-		DeletedAt: rec.DeletedAt,
+		ID:          rec.ID,
+		UserID:      rec.UserID,
+		WebinarID:   rec.WebinarID,
+		WebinarName: rec.Webinars.Name,
+		Status:      rec.Status,
+		CreatedAt:   rec.CreatedAt,
+		UpdatedAt:   rec.UpdatedAt,
+		DeletedAt:   rec.DeletedAt,
 	}
 }
 
