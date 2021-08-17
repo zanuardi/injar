@@ -47,6 +47,7 @@ func fromDomain(webinarsDomain webinars.Domain) *Webinars {
 		ID:          webinarsDomain.ID,
 		UserID:      webinarsDomain.UserID,
 		CategoryID:  webinarsDomain.CategoryID,
+		Categories:  webinarsDomain.Categories,
 		ImageUrl:    webinarsDomain.ImageUrl,
 		Name:        webinarsDomain.Name,
 		Description: webinarsDomain.Description,

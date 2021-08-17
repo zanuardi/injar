@@ -26,7 +26,7 @@ func NewWebinarController(cu webinars.Usecase) *WebinarController {
 
 func (ctrl *WebinarController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
-	webinarName := c.QueryParam("name")
+	webinarName := c.QueryParam("search")
 
 	resp, err := ctrl.webinarUC.GetAll(ctx, webinarName)
 	if err != nil {

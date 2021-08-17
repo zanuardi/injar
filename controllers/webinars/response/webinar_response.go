@@ -9,18 +9,17 @@ import (
 )
 
 type Webinar struct {
-	ID           int                   `json:"id"`
-	UserID       int                   `json:"user_id"`
-	CategoryID   int                   `json:"category_id"`
-	Categories   categories.Categories `json:"categories"`
-	CategoryName string                `json:"category_name"`
-	ImageUrl     string                `json:"image_url"`
-	Name         string                `json:"name"`
-	Description  string                `json:"description"`
-	Price        string                `json:"price"`
-	CreatedAt    time.Time             `json:"created_at"`
-	UpdatedAt    time.Time             `json:"updated_at"`
-	DeletedAt    gorm.DeletedAt        `json:"deleted_at"`
+	ID          int                   `json:"id"`
+	UserID      int                   `json:"user_id"`
+	CategoryID  int                   `json:"category_id"`
+	Categories  categories.Categories `json:"categories"`
+	ImageUrl    string                `json:"image_url"`
+	Name        string                `json:"name"`
+	Description string                `json:"description"`
+	Price       string                `json:"price"`
+	CreatedAt   time.Time             `json:"created_at"`
+	UpdatedAt   time.Time             `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt        `json:"deleted_at"`
 }
 
 func FromDomain(domain webinars.Domain) Webinar {

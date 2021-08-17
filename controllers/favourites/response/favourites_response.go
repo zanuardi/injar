@@ -1,7 +1,6 @@
 package response
 
 import (
-	"injar/repository/databases/users"
 	"injar/repository/databases/webinars"
 	"injar/usecase/favourites"
 	"time"
@@ -12,7 +11,6 @@ import (
 type Favourite struct {
 	ID        int               `json:"id"`
 	UserID    int               `json:"user_id"`
-	Users     users.Users       `json:"users"`
 	WebinarID int               `json:"webinar_id"`
 	Webinars  webinars.Webinars `json:"webinars"`
 	CreatedAt time.Time         `json:"created_at"`
@@ -25,6 +23,7 @@ func FromDomain(domain favourites.Domain) Favourite {
 		ID:        domain.ID,
 		UserID:    domain.UserID,
 		WebinarID: domain.WebinarID,
+		Webinars:  domain.Webinars,
 		CreatedAt: domain.CreatedAt,
 		UpdatedAt: domain.UpdatedAt,
 		DeletedAt: domain.DeletedAt,
