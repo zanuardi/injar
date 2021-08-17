@@ -1,6 +1,7 @@
 package users
 
 import (
+	"injar/app/middleware"
 	controller "injar/controllers"
 	"injar/controllers/users/request"
 	"injar/usecase/users"
@@ -12,6 +13,7 @@ import (
 
 type UserController struct {
 	userUseCase users.Usecase
+	jwtAuth     *middleware.ConfigJWT
 }
 
 func NewUserController(uc users.Usecase) *UserController {
@@ -72,4 +74,22 @@ func (ctrl *UserController) FindById(c echo.Context) error {
 	}
 
 	return controller.NewSuccessResponse(c, user)
+}
+
+func (ctrl *UserController) FindByToken(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	user, err := ctrl.jwtAuth.GetUser(c)
+
+	id, err := ctrl.userUseCase.GetByID(ctx, user.ID)
+
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return controller.NewSuccessResponse(c, id)
 }
