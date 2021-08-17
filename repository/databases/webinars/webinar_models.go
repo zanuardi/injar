@@ -30,6 +30,7 @@ func (rec *Webinars) toDomain() webinars.Domain {
 		ID:           rec.ID,
 		UserID:       rec.UserID,
 		CategoryID:   rec.CategoryID,
+		Categories:   rec.Categories,
 		CategoryName: rec.Categories.Name,
 		ImageUrl:     rec.ImageUrl,
 		Name:         rec.Name,

@@ -19,15 +19,15 @@ type Domain struct {
 }
 
 type Usecase interface {
-	GetByUserID(ctx context.Context, ID int) ([]Domain, error)
-	GetByID(ctx context.Context, categoryId int) (Domain, error)
-	Store(ctx context.Context, categoryDomain *Domain) (Domain, error)
-	Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error)
+	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
+	GetByID(ctx context.Context, ID int) (Domain, error)
+	Store(ctx context.Context, favouriteDomain *Domain) (Domain, error)
+	Delete(ctx context.Context, favouriteDomain *Domain) (*Domain, error)
 }
 
 type Repository interface {
 	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
-	Store(ctx context.Context, categoriesDomain *Domain) (Domain, error)
-	Delete(ctx context.Context, categoriesDomain *Domain) (Domain, error)
+	Store(ctx context.Context, favouriteDomain *Domain) (Domain, error)
+	Delete(ctx context.Context, favouriteDomain *Domain) (Domain, error)
 }
