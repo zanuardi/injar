@@ -21,43 +21,45 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
+	r := e.Group("/v1/api")
 
 	//Auth ...
-	auth := e.Group("v1/api/auth")
+	auth := r.Group("/auth")
 
 	auth.POST("/register", cl.UserController.Store)
 	auth.POST("/login", cl.UserController.Login)
 
+	//Using Bearer Token ...
+	r.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+
 	//Users ...
-	user := e.Group("v1/api/profile")
-	user.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+	user := r.Group("/profile")
 
 	user.GET("", cl.UserController.FindByToken)
 	user.PUT("", cl.UserController.Update)
 
 	//Categories ...
-	category := e.Group("v1/api/categories")
-	category.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+	category := r.Group("/categories")
 
-	category.GET("", cl.CategoriesController.GetAll)
+	category.GET("/select", cl.CategoriesController.SelectAll)
+	category.GET("", cl.CategoriesController.FindAll)
 	category.GET("/id/:id", cl.CategoriesController.FindById)
 	category.POST("", cl.CategoriesController.Store)
 	category.PUT("/id/:id", cl.CategoriesController.Update)
 	category.DELETE("/id/:id", cl.CategoriesController.Delete)
 
 	//Webinars ...
-	webinar := e.Group("v1/api/webinars")
-	webinar.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+	webinar := r.Group("/webinars")
 
-	webinar.GET("", cl.WebinarController.GetAll)
+	webinar.GET("/select", cl.WebinarController.SelectAll)
+	webinar.GET("", cl.WebinarController.FindAll)
 	webinar.GET("/id/:id", cl.WebinarController.FindById)
 	webinar.POST("", cl.WebinarController.Store)
 	webinar.PUT("/id/:id", cl.WebinarController.Update)
 	webinar.DELETE("/id/:id", cl.WebinarController.Delete)
 
 	//Favourites ...
-	favourites := e.Group("v1/api/favourites")
-	favourites.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+	favourites := r.Group("/favourites")
 
 	favourites.GET("", cl.FavouritesController.GetByUserID)
 	favourites.GET("/id/:id", cl.FavouritesController.GetById)
@@ -65,8 +67,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	favourites.DELETE("/id/:id", cl.FavouritesController.Delete)
 
 	//transactions ...
-	transactions := e.Group("v1/api/transactions")
-	transactions.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
+	transactions := r.Group("/transactions")
 
 	transactions.GET("", cl.TransactionsController.GetByUserID)
 	transactions.GET("/id/:id", cl.TransactionsController.GetById)

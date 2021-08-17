@@ -17,7 +17,7 @@ func NewMySQLCategoryRepository(conn *gorm.DB) categories.Repository {
 	}
 }
 
-func (repo *mysqlCategoriesRepository) Fetch(ctx context.Context, page, perpage int) ([]categories.Domain, int, error) {
+func (repo *mysqlCategoriesRepository) FindAll(ctx context.Context, page, perpage int) ([]categories.Domain, int, error) {
 	rec := []Categories{}
 
 	offset := (page - 1) * perpage

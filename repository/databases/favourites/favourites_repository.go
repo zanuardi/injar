@@ -17,12 +17,19 @@ func NewMySQLFavouritesRepository(conn *gorm.DB) favourites.Repository {
 	}
 }
 
-func (repo *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID int) ([]favourites.Domain, error) {
+func (repo *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID, page, perpage int) ([]favourites.Domain, int, error) {
 	rec := []Favourites{}
 
-	db := repo.DB.Preload("Webinars").Preload("Users").Where("favourites.user_id = ?", userID).Find(&rec)
-	if db.Error != nil {
-		return []favourites.Domain{}, db.Error
+	offset := (page - 1) * perpage
+	err := repo.DB.Preload("Webinars").Preload("Users").Where("favourites.user_id = ?", userID).Find(&rec).Offset(offset).Limit(perpage).Error
+	if err != nil {
+		return []favourites.Domain{}, 0, err
+	}
+
+	var totalData int64
+	err = repo.DB.Model(&rec).Where("favourites.user_id = ?", userID).Count(&totalData).Error
+	if err != nil {
+		return []favourites.Domain{}, 0, err
 	}
 
 	favouriteDomain := []favourites.Domain{}
@@ -30,7 +37,7 @@ func (repo *mysqlFavouritesRepository) GetByUserID(ctx context.Context, userID i
 		favouriteDomain = append(favouriteDomain, value.toDomain())
 	}
 
-	return favouriteDomain, nil
+	return favouriteDomain, int(totalData), nil
 }
 
 func (repo *mysqlFavouritesRepository) GetByID(ctx context.Context, ID int) (favourites.Domain, error) {

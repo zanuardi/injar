@@ -19,7 +19,7 @@ func NewCategoryUsecase(timeout time.Duration, cr Repository) Usecase {
 	}
 }
 
-func (uc *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
+func (uc *categoryUsecase) FindAll(ctx context.Context, page, perpage int) ([]Domain, int, error) {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
@@ -30,7 +30,7 @@ func (uc *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Doma
 		perpage = 25
 	}
 
-	res, total, err := uc.categoryRepository.Fetch(ctx, page, perpage)
+	res, total, err := uc.categoryRepository.FindAll(ctx, page, perpage)
 	if err != nil {
 		return []Domain{}, 0, err
 	}

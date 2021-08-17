@@ -90,7 +90,12 @@ func (cu *userUsecase) Update(ctx context.Context, usersDomain *Domain) (*Domain
 	if err != nil {
 		return &Domain{}, err
 	}
+
 	usersDomain.ID = existedUsers.ID
+	usersDomain.Password, err = encrypt.Hash(usersDomain.Password)
+	if err != nil {
+		return &Domain{}, err
+	}
 
 	result, err := cu.userRepository.Update(ctx, usersDomain)
 	if err != nil {

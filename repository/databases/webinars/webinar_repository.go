@@ -33,6 +33,28 @@ func (repo *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]
 	return webinarDomain, nil
 }
 
+func (repo *mysqlWebinarRepository) FindAll(ctx context.Context, name string, page, perpage int) ([]webinars.Domain, int, error) {
+	rec := []Webinars{}
+
+	offset := (page - 1) * perpage
+	err := repo.DB.Preload("Categories").Where("webinars.name LIKE ?", "%"+name+"%").Find(&rec).Offset(offset).Limit(perpage).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var totalData int64
+	err = repo.DB.Model(&rec).Where("webinars.name LIKE ?", "%"+name+"%").Count(&totalData).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var domainCategory []webinars.Domain
+	for _, value := range rec {
+		domainCategory = append(domainCategory, value.toDomain())
+	}
+	return domainCategory, int(totalData), nil
+}
+
 func (repo *mysqlWebinarRepository) GetByID(ctx context.Context, ID int) (webinars.Domain, error) {
 	rec := Webinars{}
 	err := repo.DB.Preload("Categories").Where("webinars.id = ?", ID).First(&rec).Error
