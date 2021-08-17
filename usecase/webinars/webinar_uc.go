@@ -27,7 +27,7 @@ func (uc *webinarUsecase) GetAll(ctx context.Context, name string) ([]Domain, er
 	return resp, nil
 }
 
-func (uc *webinarUsecase) FindAll(ctx context.Context, name string, page, perpage int) ([]Domain, int, error) {
+func (uc *webinarUsecase) FindAll(ctx context.Context, name, category string, page, perpage int) ([]Domain, int, error) {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
@@ -38,7 +38,7 @@ func (uc *webinarUsecase) FindAll(ctx context.Context, name string, page, perpag
 		perpage = 25
 	}
 
-	res, total, err := uc.webinarRepository.FindAll(ctx, name, page, perpage)
+	res, total, err := uc.webinarRepository.FindAll(ctx, name, category, page, perpage)
 	if err != nil {
 		return []Domain{}, 0, err
 	}
