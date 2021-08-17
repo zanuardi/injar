@@ -19,8 +19,8 @@ func NewCategoryUsecase(timeout time.Duration, cr Repository) Usecase {
 	}
 }
 
-func (cu *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
-	ctx, cancel := context.WithTimeout(ctx, cu.contextTimeout)
+func (uc *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
 	if page <= 0 {
@@ -30,7 +30,7 @@ func (cu *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Doma
 		perpage = 25
 	}
 
-	res, total, err := cu.categoryRepository.Fetch(ctx, page, perpage)
+	res, total, err := uc.categoryRepository.Fetch(ctx, page, perpage)
 	if err != nil {
 		return []Domain{}, 0, err
 	}
@@ -38,22 +38,22 @@ func (cu *categoryUsecase) Fetch(ctx context.Context, page, perpage int) ([]Doma
 	return res, total, nil
 }
 
-func (cu *categoryUsecase) GetAll(ctx context.Context) ([]Domain, error) {
-	resp, err := cu.categoryRepository.Find(ctx)
+func (uc *categoryUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	resp, err := uc.categoryRepository.Find(ctx)
 	if err != nil {
 		return []Domain{}, err
 	}
 	return resp, nil
 }
 
-func (cu *categoryUsecase) GetByID(ctx context.Context, categoryID int) (Domain, error) {
-	ctx, cancel := context.WithTimeout(ctx, cu.contextTimeout)
+func (uc *categoryUsecase) GetByID(ctx context.Context, categoryID int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
 	if categoryID <= 0 {
 		return Domain{}, usecase.ErrCategoryNotFound
 	}
-	res, err := cu.categoryRepository.GetByID(ctx, categoryID)
+	res, err := uc.categoryRepository.GetByID(ctx, categoryID)
 	if err != nil {
 		return Domain{}, err
 	}
@@ -61,14 +61,14 @@ func (cu *categoryUsecase) GetByID(ctx context.Context, categoryID int) (Domain,
 	return res, nil
 }
 
-func (cu *categoryUsecase) GetByName(ctx context.Context, categoryName string) (Domain, error) {
-	ctx, cancel := context.WithTimeout(ctx, cu.contextTimeout)
+func (uc *categoryUsecase) GetByName(ctx context.Context, categoryName string) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
 	if strings.TrimSpace(categoryName) == "" {
 		return Domain{}, usecase.ErrCategoryNotFound
 	}
-	res, err := cu.categoryRepository.GetByName(ctx, categoryName)
+	res, err := uc.categoryRepository.GetByName(ctx, categoryName)
 	if err != nil {
 		return Domain{}, err
 	}
@@ -76,17 +76,17 @@ func (cu *categoryUsecase) GetByName(ctx context.Context, categoryName string) (
 	return res, nil
 }
 
-func (cu *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (Domain, error) {
-	ctx, cancel := context.WithTimeout(ctx, cu.contextTimeout)
+func (uc *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
-	existedCategories, _ := cu.categoryRepository.GetByName(ctx, categoryDomain.Name)
+	existedCategories, _ := uc.categoryRepository.GetByName(ctx, categoryDomain.Name)
 
 	if existedCategories != (Domain{}) {
 		return Domain{}, usecase.ErrDuplicateData
 	}
 
-	result, err := cu.categoryRepository.Store(ctx, categoryDomain)
+	result, err := uc.categoryRepository.Store(ctx, categoryDomain)
 	if err != nil {
 		return Domain{}, err
 	}
@@ -94,14 +94,14 @@ func (cu *categoryUsecase) Store(ctx context.Context, categoryDomain *Domain) (D
 	return result, nil
 }
 
-func (cu *categoryUsecase) Update(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
-	existedCategories, err := cu.categoryRepository.GetByID(ctx, categoriesDomain.ID)
+func (uc *categoryUsecase) Update(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
+	existedCategories, err := uc.categoryRepository.GetByID(ctx, categoriesDomain.ID)
 	if err != nil {
 		return &Domain{}, err
 	}
 	categoriesDomain.ID = existedCategories.ID
 
-	result, err := cu.categoryRepository.Update(ctx, categoriesDomain)
+	result, err := uc.categoryRepository.Update(ctx, categoriesDomain)
 	if err != nil {
 		return &Domain{}, err
 	}
@@ -109,14 +109,14 @@ func (cu *categoryUsecase) Update(ctx context.Context, categoriesDomain *Domain)
 	return &result, nil
 }
 
-func (cu *categoryUsecase) Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
-	existedCategories, err := cu.categoryRepository.GetByID(ctx, categoriesDomain.ID)
+func (uc *categoryUsecase) Delete(ctx context.Context, categoriesDomain *Domain) (*Domain, error) {
+	existedCategories, err := uc.categoryRepository.GetByID(ctx, categoriesDomain.ID)
 	if err != nil {
 		return &Domain{}, err
 	}
 	categoriesDomain.ID = existedCategories.ID
 
-	result, err := cu.categoryRepository.Delete(ctx, categoriesDomain)
+	result, err := uc.categoryRepository.Delete(ctx, categoriesDomain)
 	if err != nil {
 		return &Domain{}, err
 	}

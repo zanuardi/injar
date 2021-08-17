@@ -67,3 +67,19 @@ func (repo *mysqlUsersRepository) Store(ctx context.Context, userDomain *users.D
 
 	return nil
 }
+
+func (repo *mysqlUsersRepository) Update(ctx context.Context, usersDomain *users.Domain) (users.Domain, error) {
+	rec := fromDomain(*usersDomain)
+
+	result := repo.DB.Updates(rec)
+	if result.Error != nil {
+		return users.Domain{}, result.Error
+	}
+
+	err := repo.DB.Preload("Users").First(&rec, rec.ID).Error
+	if err != nil {
+		return users.Domain{}, result.Error
+	}
+
+	return rec.toDomain(), nil
+}

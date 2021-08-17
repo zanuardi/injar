@@ -29,11 +29,11 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.POST("/login", cl.UserController.Login)
 
 	//Users ...
-	user := e.Group("v1/api/users")
+	user := e.Group("v1/api/profile")
 	user.Use(middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	user.GET("", cl.UserController.FindByToken)
-	user.GET("/id/:id", cl.UserController.FindById)
+	user.PUT("", cl.UserController.Update)
 
 	//Categories ...
 	category := e.Group("v1/api/categories")
