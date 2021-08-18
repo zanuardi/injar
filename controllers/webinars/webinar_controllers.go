@@ -45,6 +45,9 @@ func (ctrl *WebinarController) FindAll(c echo.Context) error {
 	ctx := c.Request().Context()
 	name := c.QueryParam("search")
 	category := c.QueryParam("category")
+	schedule := c.QueryParam("schedule")
+	priceFrom := c.QueryParam("price_from")
+	priceTo := c.QueryParam("price_to")
 
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
@@ -56,7 +59,7 @@ func (ctrl *WebinarController) FindAll(c echo.Context) error {
 		limit = 10
 	}
 
-	resp, total, err := ctrl.webinarUC.FindAll(ctx, name, category, page, limit)
+	resp, total, err := ctrl.webinarUC.FindAll(ctx, name, category, schedule, priceFrom, priceTo, page, limit)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

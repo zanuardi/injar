@@ -19,7 +19,8 @@ type Webinars struct {
 	ImageUrl    string
 	Name        string
 	Description string
-	Price       string
+	Price       float64
+	Schedule    time.Time
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt
@@ -36,6 +37,7 @@ func (rec *Webinars) toDomain() webinars.Domain {
 		Name:         rec.Name,
 		Description:  rec.Description,
 		Price:        rec.Price,
+		Schedule:     rec.Schedule,
 		CreatedAt:    rec.CreatedAt,
 		UpdatedAt:    rec.UpdatedAt,
 		DeletedAt:    rec.DeletedAt,
@@ -52,6 +54,7 @@ func fromDomain(webinarsDomain webinars.Domain) *Webinars {
 		Name:        webinarsDomain.Name,
 		Description: webinarsDomain.Description,
 		Price:       webinarsDomain.Price,
+		Schedule:    webinarsDomain.Schedule,
 		CreatedAt:   webinarsDomain.CreatedAt,
 		UpdatedAt:   webinarsDomain.UpdatedAt,
 		DeletedAt:   webinarsDomain.DeletedAt,
