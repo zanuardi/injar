@@ -17,7 +17,8 @@ type Domain struct {
 	ImageUrl     string
 	Name         string
 	Description  string
-	Price        string
+	Price        float64
+	Schedule     time.Time
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    gorm.DeletedAt
@@ -25,7 +26,7 @@ type Domain struct {
 
 type Usecase interface {
 	GetAll(ctx context.Context, name string) ([]Domain, error)
-	FindAll(ctx context.Context, name, category string, page, perpage int) ([]Domain, int, error)
+	FindAll(ctx context.Context, name, category, schedule, priceFrom, priceTo string, page, perpage int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoryDomain *Domain) (Domain, error)
@@ -35,7 +36,7 @@ type Usecase interface {
 
 type Repository interface {
 	GetAll(ctx context.Context, name string) ([]Domain, error)
-	FindAll(ctx context.Context, name, category string, page, perpage int) ([]Domain, int, error)
+	FindAll(ctx context.Context, name, category, schedule, priceFrom, priceTo string, page, perpage int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoriesDomain *Domain) (Domain, error)

@@ -16,7 +16,8 @@ type Webinars struct {
 	ImageUrl    string            `json:"image_url"`
 	Name        string            `json:"name"`
 	Description string            `json:"description"`
-	Price       string            `json:"price"`
+	Price       float64           `json:"price"`
+	Schedule    time.Time         `json:"schedule"`
 	CreatedAt   time.Time         `json:"created_at"`
 	UpdatedAt   time.Time         `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt    `json:"deleted_at"`
@@ -32,6 +33,7 @@ func FromDomain(domain webinars.Domain) Webinars {
 		Name:        domain.Name,
 		Description: domain.Description,
 		Price:       domain.Price,
+		Schedule:    domain.Schedule,
 		CreatedAt:   domain.CreatedAt,
 		UpdatedAt:   domain.UpdatedAt,
 		DeletedAt:   domain.DeletedAt,

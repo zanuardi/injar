@@ -33,26 +33,40 @@ func (repo *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]
 	return webinarDomain, nil
 }
 
-func (repo *mysqlWebinarRepository) FindAll(ctx context.Context, name, category string, page, perpage int) ([]webinars.Domain, int, error) {
+func (repo *mysqlWebinarRepository) FindAll(ctx context.Context, search, category, schedule, priceFrom, priceTo string, page, perpage int) ([]webinars.Domain, int, error) {
 	rec := []Webinars{}
 	var whereStatement string
 
 	if category != "" {
-		whereStatement += category
+		whereStatement += ` AND categories.name = '` + category + `'`
+	}
+
+	if schedule != "" {
+		whereStatement += ` AND webinars.schedule = '` + schedule + `'`
+	}
+
+	if priceFrom != "" {
+		whereStatement += ` AND (webinars.price >= ` + priceFrom
+	}
+
+	if priceTo != "" {
+		whereStatement += ` AND webinars.price <= ` + priceTo + `)`
 	}
 
 	offset := (page - 1) * perpage
-	err := repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Offset(offset).Limit(perpage).Error
+	err := repo.DB.Raw("SELECT * FROM webinars LEFT JOIN categories on categories.id = webinars.category_id WHERE webinars.name LIKE " +
+		"'%" + search + "%'" + whereStatement).Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []webinars.Domain{}, 0, err
 	}
 
 	var totalData int64
-	err = repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Count(&totalData).Error
+
+	err = repo.DB.Raw("SELECT * FROM webinars LEFT JOIN categories on categories.id = webinars.category_id WHERE webinars.name LIKE " +
+		"'%" + search + "%'" + whereStatement).Find(&rec).Count(&totalData).Error
 	if err != nil {
 		return []webinars.Domain{}, 0, err
 	}
-
 	var domainCategory []webinars.Domain
 	for _, value := range rec {
 		domainCategory = append(domainCategory, value.toDomain())
