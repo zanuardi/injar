@@ -3,6 +3,7 @@ package routes
 import (
 	"injar/controllers/categories"
 	"injar/controllers/favourites"
+	"injar/controllers/files"
 	"injar/controllers/transactions"
 	"injar/controllers/users"
 	"injar/controllers/webinars"
@@ -18,6 +19,7 @@ type ControllerList struct {
 	WebinarController      webinars.WebinarController
 	FavouritesController   favourites.FavouritesController
 	TransactionsController transactions.TransactionsController
+	FileController         files.FileController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -74,4 +76,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	transactions.POST("", cl.TransactionsController.Store)
 	transactions.DELETE("/id/:id", cl.TransactionsController.Delete)
 
+	fileRoute := r.Group("/files")
+	fileRoute.POST("", cl.FileController.Store)
 }

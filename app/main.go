@@ -23,6 +23,10 @@ import (
 	_transactionsRepo "injar/repository/databases/transactions"
 	_transactionsUsecase "injar/usecase/transactions"
 
+	_filesController "injar/controllers/files"
+	_filesRepo "injar/repository/databases/files"
+	_filesUsecase "injar/usecase/files"
+
 	_dbDriver "injar/repository/mysql"
 
 	"log"
@@ -88,6 +92,11 @@ func main() {
 	transactionsUsecase := _transactionsUsecase.NewTransactionsUsecase(timeoutContext, transactionsRepo)
 	transactionsCtrl := _transactionsController.NewTransactionsController(transactionsUsecase)
 
+	// files ...
+	filesRepo := _filesRepo.NewFileRepository(db)
+	filesUsecase := _filesUsecase.NewFileUC(timeoutContext, filesRepo)
+	filesCtrl := _filesController.NewFileController(filesUsecase, db)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:          configJWT.Init(),
 		UserController:         *userCtrl,
@@ -95,6 +104,7 @@ func main() {
 		WebinarController:      *webinarsCtrl,
 		FavouritesController:   *favouritesCtrl,
 		TransactionsController: *transactionsCtrl,
+		FileController:         *filesCtrl,
 	}
 	routesInit.RouteRegister(e)
 

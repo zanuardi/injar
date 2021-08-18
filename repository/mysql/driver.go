@@ -4,6 +4,7 @@ import (
 	"fmt"
 	categoriesRepo "injar/repository/databases/categories"
 	favouritesRepo "injar/repository/databases/favourites"
+	filesRepo "injar/repository/databases/files"
 	transactionsRepo "injar/repository/databases/transactions"
 	usersRepo "injar/repository/databases/users"
 	webinarsRepo "injar/repository/databases/webinars"
@@ -41,6 +42,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 		&webinarsRepo.Webinars{},
 		&favouritesRepo.Favourites{},
 		&transactionsRepo.Transactions{},
+		&filesRepo.File{},
 	)
 
 	return db
