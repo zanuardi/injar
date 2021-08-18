@@ -15,6 +15,14 @@ import (
 	_webinarsRepo "injar/repository/databases/webinars"
 	_webinarsUsecase "injar/usecase/webinars"
 
+	_favouritesController "injar/controllers/favourites"
+	_favouritesRepo "injar/repository/databases/favourites"
+	_favouritesUsecase "injar/usecase/favourites"
+
+	_transactionsController "injar/controllers/transactions"
+	_transactionsRepo "injar/repository/databases/transactions"
+	_transactionsUsecase "injar/usecase/transactions"
+
 	_dbDriver "injar/repository/mysql"
 
 	"log"
@@ -25,7 +33,6 @@ import (
 )
 
 func init() {
-
 	viper.SetConfigFile(`config.json`)
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -71,11 +78,23 @@ func main() {
 	webinarsUsecase := _webinarsUsecase.NewWebinarUsecase(timeoutContext, webinarsRepo)
 	webinarsCtrl := _webinarsController.NewWebinarController(webinarsUsecase)
 
+	// favourites ...
+	favouritesRepo := _favouritesRepo.NewMySQLFavouritesRepository(db)
+	favouritesUsecase := _favouritesUsecase.NewFavouritesUsecase(timeoutContext, favouritesRepo)
+	favouritesCtrl := _favouritesController.NewFavouritesController(favouritesUsecase)
+
+	// transactions ...
+	transactionsRepo := _transactionsRepo.NewMySQLTransactionsRepository(db)
+	transactionsUsecase := _transactionsUsecase.NewTransactionsUsecase(timeoutContext, transactionsRepo)
+	transactionsCtrl := _transactionsController.NewTransactionsController(transactionsUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:        configJWT.Init(),
-		UserController:       *userCtrl,
-		CategoriesController: *categoriesCtrl,
-		WebinarController:    *webinarsCtrl,
+		JWTMiddleware:          configJWT.Init(),
+		UserController:         *userCtrl,
+		CategoriesController:   *categoriesCtrl,
+		WebinarController:      *webinarsCtrl,
+		FavouritesController:   *favouritesCtrl,
+		TransactionsController: *transactionsCtrl,
 	}
 	routesInit.RouteRegister(e)
 

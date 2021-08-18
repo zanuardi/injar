@@ -16,7 +16,7 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error)
+	FindAll(ctx context.Context, page, perpage int) ([]Domain, int, error)
 	GetAll(ctx context.Context) ([]Domain, error)
 	GetByID(ctx context.Context, categoryId int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
@@ -26,7 +26,7 @@ type Usecase interface {
 }
 
 type Repository interface {
-	Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error)
+	FindAll(ctx context.Context, page, perpage int) ([]Domain, int, error)
 	Find(ctx context.Context) ([]Domain, error)
 	GetByID(ctx context.Context, categoryId int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)

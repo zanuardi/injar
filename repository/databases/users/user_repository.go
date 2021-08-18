@@ -8,26 +8,26 @@ import (
 )
 
 type mysqlUsersRepository struct {
-	Conn *gorm.DB
+	DB *gorm.DB
 }
 
-func NewMySQLUserRepository(conn *gorm.DB) users.Repository {
+func NewMySQLUserRepository(db *gorm.DB) users.Repository {
 	return &mysqlUsersRepository{
-		Conn: conn,
+		DB: db,
 	}
 }
 
-func (nr *mysqlUsersRepository) Fetch(ctx context.Context, page, perpage int) ([]users.Domain, int, error) {
+func (repo *mysqlUsersRepository) Fetch(ctx context.Context, page, perpage int) ([]users.Domain, int, error) {
 	rec := []Users{}
 
 	offset := (page - 1) * perpage
-	err := nr.Conn.Offset(offset).Limit(perpage).Find(&rec).Error
+	err := repo.DB.Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []users.Domain{}, 0, err
 	}
 
 	var totalData int64
-	err = nr.Conn.Count(&totalData).Error
+	err = repo.DB.Count(&totalData).Error
 	if err != nil {
 		return []users.Domain{}, 0, err
 	}
@@ -39,31 +39,47 @@ func (nr *mysqlUsersRepository) Fetch(ctx context.Context, page, perpage int) ([
 	return domainNews, int(totalData), nil
 }
 
-func (nr *mysqlUsersRepository) GetByID(ctx context.Context, userId int) (users.Domain, error) {
+func (repo *mysqlUsersRepository) GetByID(ctx context.Context, userId int) (users.Domain, error) {
 	rec := Users{}
-	err := nr.Conn.Where("id = ?", userId).First(&rec).Error
+	err := repo.DB.Where("id = ?", userId).First(&rec).Error
 	if err != nil {
 		return users.Domain{}, err
 	}
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlUsersRepository) GetByUsername(ctx context.Context, username string) (users.Domain, error) {
+func (repo *mysqlUsersRepository) GetByUsername(ctx context.Context, username string) (users.Domain, error) {
 	rec := Users{}
-	err := nr.Conn.Where("username = ?", username).First(&rec).Error
+	err := repo.DB.Where("username = ?", username).First(&rec).Error
 	if err != nil {
 		return users.Domain{}, err
 	}
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlUsersRepository) Store(ctx context.Context, userDomain *users.Domain) error {
+func (repo *mysqlUsersRepository) Store(ctx context.Context, userDomain *users.Domain) error {
 	rec := fromDomain(*userDomain)
 
-	result := nr.Conn.Create(rec)
+	result := repo.DB.Create(rec)
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func (repo *mysqlUsersRepository) Update(ctx context.Context, usersDomain *users.Domain) (users.Domain, error) {
+	rec := fromDomain(*usersDomain)
+
+	result := repo.DB.Updates(rec)
+	if result.Error != nil {
+		return users.Domain{}, result.Error
+	}
+
+	err := repo.DB.Preload("Users").First(&rec, rec.ID).Error
+	if err != nil {
+		return users.Domain{}, result.Error
+	}
+
+	return rec.toDomain(), nil
 }

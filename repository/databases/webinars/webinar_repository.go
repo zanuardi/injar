@@ -17,10 +17,10 @@ func NewMySQLWebinarRepository(conn *gorm.DB) webinars.Repository {
 	}
 }
 
-func (cr *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]webinars.Domain, error) {
 	rec := []Webinars{}
 
-	err := cr.DB.Joins("Categories").Where("webinars.name LIKE ?", "%"+name+"%").Find(&rec).Error
+	err := repo.DB.Preload("Categories").Where("webinars.name LIKE ?", "%"+name+"%").Find(&rec).Error
 	if err != nil {
 		return []webinars.Domain{}, err
 	}
@@ -33,28 +33,55 @@ func (cr *mysqlWebinarRepository) GetAll(ctx context.Context, name string) ([]we
 	return webinarDomain, nil
 }
 
-func (cr *mysqlWebinarRepository) GetByID(ctx context.Context, ID int) (webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) FindAll(ctx context.Context, name, category string, page, perpage int) ([]webinars.Domain, int, error) {
+	rec := []Webinars{}
+	var whereStatement string
+
+	if category != "" {
+		whereStatement += category
+	}
+
+	offset := (page - 1) * perpage
+	err := repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Offset(offset).Limit(perpage).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var totalData int64
+	err = repo.DB.Joins("Categories").Where("webinars.name LIKE ? AND categories.name = ? ", "%"+name+"%", whereStatement).Find(&rec).Count(&totalData).Error
+	if err != nil {
+		return []webinars.Domain{}, 0, err
+	}
+
+	var domainCategory []webinars.Domain
+	for _, value := range rec {
+		domainCategory = append(domainCategory, value.toDomain())
+	}
+	return domainCategory, int(totalData), nil
+}
+
+func (repo *mysqlWebinarRepository) GetByID(ctx context.Context, ID int) (webinars.Domain, error) {
 	rec := Webinars{}
-	err := cr.DB.Joins("Categories").Where("webinars.id = ?", ID).First(&rec).Error
+	err := repo.DB.Joins("Categories").Where("webinars.id = ?", ID).First(&rec).Error
 	if err != nil {
 		return webinars.Domain{}, err
 	}
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlWebinarRepository) GetByName(ctx context.Context, webinarName string) (webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) GetByName(ctx context.Context, webinarName string) (webinars.Domain, error) {
 	rec := Webinars{}
-	err := nr.DB.Joins("Categories").Where("name = ?", webinarName).First(&rec).Error
+	err := repo.DB.Joins("Categories").Where("name = ?", webinarName).First(&rec).Error
 	if err != nil {
 		return webinars.Domain{}, err
 	}
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlWebinarRepository) Store(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) Store(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
 	rec := fromDomain(*webinarsDomain)
 
-	result := nr.DB.Create(&rec)
+	result := repo.DB.Create(&rec)
 	if result.Error != nil {
 		return webinars.Domain{}, result.Error
 	}
@@ -62,10 +89,10 @@ func (nr *mysqlWebinarRepository) Store(ctx context.Context, webinarsDomain *web
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlWebinarRepository) Update(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) Update(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
 	rec := fromDomain(*webinarsDomain)
 
-	result := nr.DB.Updates(rec)
+	result := repo.DB.Updates(rec)
 	if result.Error != nil {
 		return webinars.Domain{}, result.Error
 	}
@@ -73,10 +100,10 @@ func (nr *mysqlWebinarRepository) Update(ctx context.Context, webinarsDomain *we
 	return rec.toDomain(), nil
 }
 
-func (nr *mysqlWebinarRepository) Delete(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
+func (repo *mysqlWebinarRepository) Delete(ctx context.Context, webinarsDomain *webinars.Domain) (webinars.Domain, error) {
 	rec := fromDomain(*webinarsDomain)
 
-	result := nr.DB.Delete(rec)
+	result := repo.DB.Delete(rec)
 
 	if result.Error != nil {
 		return webinars.Domain{}, result.Error

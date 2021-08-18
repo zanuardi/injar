@@ -2,6 +2,7 @@ package webinars
 
 import (
 	"context"
+	"injar/repository/databases/categories"
 	"time"
 
 	"gorm.io/gorm"
@@ -11,6 +12,7 @@ type Domain struct {
 	ID           int
 	UserID       int
 	CategoryID   int
+	Categories   categories.Categories
 	CategoryName string
 	ImageUrl     string
 	Name         string
@@ -23,6 +25,7 @@ type Domain struct {
 
 type Usecase interface {
 	GetAll(ctx context.Context, name string) ([]Domain, error)
+	FindAll(ctx context.Context, name, category string, page, perpage int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoryDomain *Domain) (Domain, error)
@@ -32,6 +35,7 @@ type Usecase interface {
 
 type Repository interface {
 	GetAll(ctx context.Context, name string) ([]Domain, error)
+	FindAll(ctx context.Context, name, category string, page, perpage int) ([]Domain, int, error)
 	GetByID(ctx context.Context, ID int) (Domain, error)
 	GetByName(ctx context.Context, categoryName string) (Domain, error)
 	Store(ctx context.Context, categoriesDomain *Domain) (Domain, error)

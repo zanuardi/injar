@@ -24,7 +24,7 @@ func NewCategoryController(cu categories.Usecase) *CategoryController {
 	}
 }
 
-func (ctrl *CategoryController) GetAll(c echo.Context) error {
+func (ctrl *CategoryController) SelectAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	resp, err := ctrl.categoryUsecase.GetAll(ctx)
@@ -40,11 +40,19 @@ func (ctrl *CategoryController) GetAll(c echo.Context) error {
 	return controller.NewSuccessResponse(c, responseController)
 }
 
-func (ctrl *CategoryController) SelectAll(c echo.Context) error {
+func (ctrl *CategoryController) FindAll(c echo.Context) error {
 	ctx := c.Request().Context()
 	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 
-	resp, _, err := ctrl.categoryUsecase.Fetch(ctx, page, 10)
+	if page <= 0 {
+		page = 1
+	}
+	if limit <= 0 || limit > 50 {
+		limit = 10
+	}
+
+	resp, total, err := ctrl.categoryUsecase.FindAll(ctx, page, limit)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -54,7 +62,8 @@ func (ctrl *CategoryController) SelectAll(c echo.Context) error {
 		responseController = append(responseController, response.FromDomain(value))
 	}
 
-	return controller.NewSuccessResponse(c, responseController)
+	pagination := controller.PaginationRes(page, total, limit)
+	return controller.NewSuccessResponsePagination(c, responseController, pagination)
 }
 
 func (ctrl *CategoryController) FindById(c echo.Context) error {
@@ -72,8 +81,7 @@ func (ctrl *CategoryController) FindById(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return controller.NewSuccessResponse(c, category)
-
+	return controller.NewSuccessResponse(c, response.FromDomain(category))
 }
 
 func (ctrl *CategoryController) Store(c echo.Context) error {

@@ -1,8 +1,10 @@
 package users
 
 import (
+	"injar/app/middleware"
 	controller "injar/controllers"
 	"injar/controllers/users/request"
+	"injar/controllers/users/response"
 	"injar/usecase/users"
 	"net/http"
 
@@ -10,12 +12,13 @@ import (
 )
 
 type UserController struct {
-	userUseCase users.Usecase
+	userUsecase users.Usecase
+	jwtAuth     *middleware.ConfigJWT
 }
 
 func NewUserController(uc users.Usecase) *UserController {
 	return &UserController{
-		userUseCase: uc,
+		userUsecase: uc,
 	}
 }
 
@@ -27,7 +30,7 @@ func (ctrl *UserController) Store(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.userUseCase.Store(ctx, req.ToDomain())
+	err := ctrl.userUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -43,7 +46,7 @@ func (ctrl *UserController) Login(c echo.Context) error {
 		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	token, err := ctrl.userUseCase.CreateToken(ctx, req.Username, req.Password)
+	token, err := ctrl.userUsecase.CreateToken(ctx, req.Username, req.Password)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -55,20 +58,42 @@ func (ctrl *UserController) Login(c echo.Context) error {
 	return controller.NewSuccessResponse(c, response)
 }
 
-func (ctrl *UserController) CreateToken(c echo.Context) error {
+func (ctrl *UserController) FindByToken(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	username := c.QueryParam("username")
-	password := c.QueryParam("password")
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
 
-	token, err := ctrl.userUseCase.CreateToken(ctx, username, password)
+	res, err := ctrl.userUsecase.GetByID(ctx, user.ID)
+
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return controller.NewSuccessResponse(c, response.FromDomain(res))
+}
+
+func (ctrl *UserController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	user, err := ctrl.jwtAuth.GetUser(c)
+	if err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	req := request.Users{}
+	if err := c.Bind(&req); err != nil {
+		return controller.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	domainReq := req.ToDomain()
+	domainReq.ID = user.ID
+	resp, err := ctrl.userUsecase.Update(ctx, domainReq)
 	if err != nil {
 		return controller.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	response := struct {
-		Token string `json:"token"`
-	}{Token: token}
-
-	return controller.NewSuccessResponse(c, response)
+	return controller.NewSuccessResponse(c, response.FromDomain(*resp))
 }

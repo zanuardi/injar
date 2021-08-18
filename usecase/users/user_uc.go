@@ -69,3 +69,38 @@ func (uc *userUsecase) Store(ctx context.Context, userDomain *Domain) error {
 
 	return nil
 }
+
+func (uc *userUsecase) GetByID(ctx context.Context, ID int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
+	defer cancel()
+
+	if ID <= 0 {
+		return Domain{}, usecase.ErrNotFound
+	}
+	res, err := uc.userRepository.GetByID(ctx, ID)
+	if err != nil {
+		return Domain{}, err
+	}
+
+	return res, nil
+}
+
+func (cu *userUsecase) Update(ctx context.Context, usersDomain *Domain) (*Domain, error) {
+	existedUsers, err := cu.userRepository.GetByID(ctx, usersDomain.ID)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	usersDomain.ID = existedUsers.ID
+	usersDomain.Password, err = encrypt.Hash(usersDomain.Password)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	result, err := cu.userRepository.Update(ctx, usersDomain)
+	if err != nil {
+		return &Domain{}, err
+	}
+
+	return &result, nil
+}
