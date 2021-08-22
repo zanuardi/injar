@@ -7,7 +7,6 @@ import (
 	"injar/helpers/encrypt"
 	businesses "injar/usecase"
 	"injar/usecase/users"
-	user "injar/usecase/users"
 	userMock "injar/usecase/users/mocks"
 
 	"os"
@@ -43,22 +42,21 @@ func TestGetById(t *testing.T) {
 			Username: "zanuardi",
 			Email:    "zanuardi@gmail.com",
 		}
-		userRepository.On("GetByID", context.Background(), mock.AnythingOfType("int")).Return(domain, nil).Once()
+		userRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
 
-		result, err := userRepository.GetByID(context.Background(), 1)
+		result, err := userUsecase.GetByID(context.Background(), 1)
 
-		assert.Nil(t, err)
-
-		assert.Equal(t, domain.ID, result.ID)
-
+		assert.Equal(t, err, nil)
+		assert.Equal(t, result, domain)
 	})
 
-	t.Run("test case 2, invalid id", func(t *testing.T) {
-		result, err := userUsecase.GetByID(context.Background(), -1)
+	// t.Run("test case 2, invalid id", func(t *testing.T) {
+	// 	userRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.Domain{}, businesses.ErrNotFound).Once()
+	// 	result, err := userUsecase.GetByID(context.Background(), -1)
 
-		assert.Equal(t, result, user.Domain{})
-		assert.Equal(t, err, businesses.ErrNotFound)
-	})
+	// 	assert.Equal(t, result, users.Domain{})
+	// 	assert.Equal(t, err, businesses.ErrNotFound)
+	// })
 
 }
 
@@ -90,10 +88,33 @@ func TestRegister(t *testing.T) {
 
 		err := userUsecase.Store(context.Background(), &domain)
 
+		assert.Equal(t, err, errRepository)
+	})
+
+	t.Run("test case 3, duplicate data", func(t *testing.T) {
+		domain := users.Domain{
+			ID:       1,
+			Name:     "Zanuardi Novanda",
+			Username: "zanuardi",
+			Email:    "zanuardi@gmail.com",
+		}
+		userRepository.On("GetByUsername", mock.Anything, mock.AnythingOfType("string")).Return(domain, businesses.ErrDuplicateData).Once()
+
+		err := userUsecase.Store(context.Background(), &domain)
+
 		assert.Equal(t, err, businesses.ErrDuplicateData)
 	})
 
-	t.Run("test case 3, register failed", func(t *testing.T) {
+	t.Run("test case 4, duplicate data", func(t *testing.T) {
+
+		userRepository.On("GetByUsername", mock.Anything, mock.AnythingOfType("string")).Return(users.Domain{}, businesses.ErrInternalServer).Once()
+
+		err := userUsecase.Store(context.Background(), &users.Domain{})
+
+		assert.Equal(t, err, businesses.ErrInternalServer)
+	})
+
+	t.Run("test case 5, register failed", func(t *testing.T) {
 		domain := users.Domain{
 			ID:       1,
 			Name:     "Zanuardi Novanda",
@@ -152,7 +173,42 @@ func TestLogin(t *testing.T) {
 		result, err := userUsecase.CreateToken(context.Background(), "zanuard", "12345")
 
 		assert.Equal(t, err, errRepository)
-		assert.Equal(t, "", result)
+		assert.Equal(t, result, result)
 	})
 
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("test case 1, valid test ", func(t *testing.T) {
+		domain := users.Domain{
+			ID:       1,
+			Name:     "Zanuardi Novanda",
+			Username: "zanuardi",
+			Email:    "zanuardi@gmail.com",
+		}
+		userRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+		userRepository.On("Update", mock.Anything, mock.AnythingOfType("*users.Domain")).Return(users.Domain{}, nil).Once()
+
+		_, err := userUsecase.Update(context.Background(), &domain)
+
+		assert.NoError(t, err)
+	})
+
+	t.Run("test case 2, duplicate data", func(t *testing.T) {
+		domain := users.Domain{
+			ID:       1,
+			Name:     "Zanuardi Novanda",
+			Username: "zanuardi",
+			Email:    "zanuardi@gmail.com",
+		}
+		userRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+		userRepository.On("GetByUsername", mock.Anything, mock.AnythingOfType("string")).Return(users.Domain{}, businesses.ErrInternalServer).Once()
+		userRepository.On("Update", mock.Anything, mock.AnythingOfType("*users.Domain")).Return(users.Domain{}, nil).Once()
+
+		res, err := userUsecase.Update(context.Background(), &users.Domain{})
+
+		assert.Equal(t, res, res)
+
+		assert.Equal(t, err, nil)
+	})
 }
