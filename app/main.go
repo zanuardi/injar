@@ -23,6 +23,14 @@ import (
 	_transactionsRepo "injar/repository/databases/transactions"
 	_transactionsUsecase "injar/usecase/transactions"
 
+	_filesController "injar/controllers/files"
+	_filesRepo "injar/repository/databases/files"
+	_filesUsecase "injar/usecase/files"
+
+	_weatherController "injar/controllers/weather"
+	_weatherRepo "injar/repository/thirdparties/weather"
+	_weatherUsecase "injar/usecase/weather"
+
 	_dbDriver "injar/repository/mysql"
 
 	"log"
@@ -88,6 +96,16 @@ func main() {
 	transactionsUsecase := _transactionsUsecase.NewTransactionsUsecase(timeoutContext, transactionsRepo)
 	transactionsCtrl := _transactionsController.NewTransactionsController(transactionsUsecase)
 
+	// files ...
+	filesRepo := _filesRepo.NewFileRepository(db)
+	filesUsecase := _filesUsecase.NewFileUC(timeoutContext, filesRepo)
+	filesCtrl := _filesController.NewFileController(filesUsecase, db)
+
+	// files ...
+	weatherRepo := _weatherRepo.NewWeatherRepository()
+	weatherUsecase := _weatherUsecase.NewWeatherUsecase(timeoutContext, weatherRepo)
+	weatherCtrl := _weatherController.NewWeatherController(e, weatherUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:          configJWT.Init(),
 		UserController:         *userCtrl,
@@ -95,6 +113,8 @@ func main() {
 		WebinarController:      *webinarsCtrl,
 		FavouritesController:   *favouritesCtrl,
 		TransactionsController: *transactionsCtrl,
+		FileController:         *filesCtrl,
+		WeatherController:      *weatherCtrl,
 	}
 	routesInit.RouteRegister(e)
 

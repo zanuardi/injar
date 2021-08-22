@@ -3,8 +3,10 @@ package routes
 import (
 	"injar/controllers/categories"
 	"injar/controllers/favourites"
+	"injar/controllers/files"
 	"injar/controllers/transactions"
 	"injar/controllers/users"
+	"injar/controllers/weather"
 	"injar/controllers/webinars"
 
 	echo "github.com/labstack/echo/v4"
@@ -18,6 +20,8 @@ type ControllerList struct {
 	WebinarController      webinars.WebinarController
 	FavouritesController   favourites.FavouritesController
 	TransactionsController transactions.TransactionsController
+	FileController         files.FileController
+	WeatherController      weather.WeatherController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -74,4 +78,11 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	transactions.POST("", cl.TransactionsController.Store)
 	transactions.DELETE("/id/:id", cl.TransactionsController.Delete)
 
+	//files ...
+	fileRoute := r.Group("/files")
+	fileRoute.POST("", cl.FileController.Store)
+
+	//weathers ...
+	weatherRoute := r.Group("/weathers/:city_name")
+	weatherRoute.GET("", cl.WeatherController.GetByCity)
 }
