@@ -1,0 +1,1646 @@
+{
+	"info": {
+		"_postman_id": "9dee9c0b-f580-45cf-a7f1-3368a22a2f06",
+		"name": "Injar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Valhalla\",\r\n    \"username\":\"valhalla\",\r\n    \"email\":\"valhallatyr5@gmail.com\",\r\n    \"password\":\"valhalla123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", responseBody.data.token);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"valhalla\",\r\n    \"password\":\"valhalla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/auth/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile by Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/profile"
+					},
+					"response": [
+						{
+							"name": "Get Profile by Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"valhalla\",\r\n    \"password\":\"valhalla123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/users"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 06:53:30 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "339"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"Id\": 3,\n        \"Name\": \"Zanuardi\",\n        \"Email\": \"zanuardi@gmail.com\",\n        \"Username\": \"zanuardi1\",\n        \"Password\": \"$2a$04$HXV0vx7iEonhPAeeBE8I.Od/jxqvz0zumbFpCObqwt/FQWAuJSg7W\",\n        \"ImageUrl\": \"\",\n        \"CreatedAt\": \"2021-08-16T09:51:43.066+07:00\",\n        \"UpdatedAt\": \"2021-08-16T09:51:43.066+07:00\",\n        \"DeletedAt\": \"0001-01-01T00:00:00Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Zanuardi Edit\",\r\n    \"username\":\"zanuardi1\",\r\n    \"email\":\"zanuardi@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/profile"
+					},
+					"response": [
+						{
+							"name": "Get Profile by Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"valhalla\",\r\n    \"password\":\"valhalla123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/users"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 06:53:30 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "339"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"Id\": 3,\n        \"Name\": \"Zanuardi\",\n        \"Email\": \"zanuardi@gmail.com\",\n        \"Username\": \"zanuardi1\",\n        \"Password\": \"$2a$04$HXV0vx7iEonhPAeeBE8I.Od/jxqvz0zumbFpCObqwt/FQWAuJSg7W\",\n        \"ImageUrl\": \"\",\n        \"CreatedAt\": \"2021-08-16T09:51:43.066+07:00\",\n        \"UpdatedAt\": \"2021-08-16T09:51:43.066+07:00\",\n        \"DeletedAt\": \"0001-01-01T00:00:00Z\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Find All Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/categories"
+					},
+					"response": [
+						{
+							"name": "Find All Categories",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/categories"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 15:59:13 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "526"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Teknologi Edit\",\n            \"created_at\": \"2021-08-13T14:56:53.114+07:00\",\n            \"updated_at\": \"2021-08-16T09:54:18.735+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Bisnis\",\n            \"created_at\": \"2021-08-14T11:54:01.846+07:00\",\n            \"updated_at\": \"2021-08-14T11:54:01.846+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Coba\",\n            \"created_at\": \"2021-08-14T14:31:52.634+07:00\",\n            \"updated_at\": \"2021-08-14T14:31:52.634+07:00\",\n            \"deleted_at\": null\n        }\n    ],\n    \"pagination\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"count\": 3,\n        \"per_page\": 10\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Find Categories By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"valhalla\",\r\n    \"password\":\"valhalla123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/categories/id/1"
+					},
+					"response": [
+						{
+							"name": "Find Categories By Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"valhalla\",\r\n    \"password\":\"valhalla123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/categories/id/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"id",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 14 Aug 2021 07:26:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "187"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"ID\": 1,\n        \"Name\": \"Teknologi Edit\",\n        \"CreatedAt\": \"2021-08-13T14:56:53.114+07:00\",\n        \"UpdatedAt\": \"2021-08-14T12:31:15.635+07:00\",\n        \"DeletedAt\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Categories",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/categories"
+					},
+					"response": [
+						{
+							"name": "Add Categories",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Self Improvement\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/categories"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 14 Aug 2021 07:27:31 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "158"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 0,\n        \"name\": \"\",\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi Edit\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/categories/id/1"
+					},
+					"response": [
+						{
+							"name": "Edit Categories",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/categories/id/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"id",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 14 Aug 2021 07:27:48 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "158"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 0,\n        \"name\": \"\",\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/categories/id/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"id",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Categories",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/categories/id/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"id",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 14 Aug 2021 07:32:06 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "158"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 0,\n        \"name\": \"\",\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Webinars",
+			"item": [
+				{
+					"name": "Select All Webinars",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/webinars/select",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"webinars",
+								"select"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "2022 edit",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "2021",
+									"disabled": true
+								},
+								{
+									"key": "category_name",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Webinars",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/webinars?name",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"webinars"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:45:25 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "895"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": [\n        {\n            \"id\": 3,\n            \"user_id\": 1,\n            \"category_id\": 1,\n            \"categories\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n                \"DeletedAt\": null\n            },\n            \"category_name\": \"\",\n            \"image_url\": \"\",\n            \"name\": \"Webinar Teknologi 2021\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"0\",\n            \"created_at\": \"2021-08-15T22:10:55.967+07:00\",\n            \"updated_at\": \"2021-08-15T22:10:55.967+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 4,\n            \"user_id\": 1,\n            \"category_id\": 1,\n            \"categories\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n                \"DeletedAt\": null\n            },\n            \"category_name\": \"\",\n            \"image_url\": \"\",\n            \"name\": \"Webinar Teknologi 2022\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"0\",\n            \"created_at\": \"2021-08-15T22:22:19.742+07:00\",\n            \"updated_at\": \"2021-08-15T22:22:19.742+07:00\",\n            \"deleted_at\": null\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Webinars",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/webinars?name",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"webinars"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Webinars",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/webinars?search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"webinars"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 16:55:31 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1874"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": [\n        {\n            \"id\": 3,\n            \"user_id\": 1,\n            \"category_id\": 1,\n            \"categories\": {\n                \"id\": 1,\n                \"name\": \"Teknologi Edit\",\n                \"created_at\": \"2021-08-13T14:56:53.114+07:00\",\n                \"updated_at\": \"2021-08-16T09:54:18.735+07:00\",\n                \"deleted_at\": null\n            },\n            \"image_url\": \"\",\n            \"name\": \"Webinar Teknologi 2022 EDIT\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"0\",\n            \"created_at\": \"2021-08-15T22:10:55.967+07:00\",\n            \"updated_at\": \"2021-08-15T22:46:54.859+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 4,\n            \"user_id\": 1,\n            \"category_id\": 1,\n            \"categories\": {\n                \"id\": 1,\n                \"name\": \"Teknologi Edit\",\n                \"created_at\": \"2021-08-13T14:56:53.114+07:00\",\n                \"updated_at\": \"2021-08-16T09:54:18.735+07:00\",\n                \"deleted_at\": null\n            },\n            \"image_url\": \"\",\n            \"name\": \"Webinar Teknologi 2022\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"0\",\n            \"created_at\": \"2021-08-15T22:22:19.742+07:00\",\n            \"updated_at\": \"2021-08-15T22:22:19.742+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 7,\n            \"user_id\": 3,\n            \"category_id\": 2,\n            \"categories\": {\n                \"id\": 2,\n                \"name\": \"Bisnis\",\n                \"created_at\": \"2021-08-14T11:54:01.846+07:00\",\n                \"updated_at\": \"2021-08-14T11:54:01.846+07:00\",\n                \"deleted_at\": null\n            },\n            \"image_url\": \"\",\n            \"name\": \"Webinar Bisnis 2022 EDIT LAGI\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"13\",\n            \"created_at\": \"2021-08-16T15:27:15.122+07:00\",\n            \"updated_at\": \"2021-08-17T22:33:37.732+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 8,\n            \"user_id\": 3,\n            \"category_id\": 2,\n            \"categories\": {\n                \"id\": 2,\n                \"name\": \"Bisnis\",\n                \"created_at\": \"2021-08-14T11:54:01.846+07:00\",\n                \"updated_at\": \"2021-08-14T11:54:01.846+07:00\",\n                \"deleted_at\": null\n            },\n            \"image_url\": \"\",\n            \"name\": \"Webinar Bisnis 2022 Coba 2\",\n            \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n            \"price\": \"0\",\n            \"created_at\": \"2021-08-16T15:28:54.341+07:00\",\n            \"updated_at\": \"2021-08-16T15:28:54.341+07:00\",\n            \"deleted_at\": null\n        }\n    ],\n    \"pagination\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 4,\n        \"per_page\": 10\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Webinars By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/webinars"
+					},
+					"response": [
+						{
+							"name": "Get Webinars By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/webinars/id/3"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:40:31 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "354"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"ID\": 3,\n        \"UserID\": 1,\n        \"CategoryID\": 1,\n        \"CategoryName\": \"Teknologi\",\n        \"ImageUrl\": \"\",\n        \"Name\": \"Webinar Teknologi 2021\",\n        \"Description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n        \"Price\": \"0\",\n        \"CreatedAt\": \"2021-08-15T22:10:55.967+07:00\",\n        \"UpdatedAt\": \"2021-08-15T22:10:55.967+07:00\",\n        \"DeletedAt\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Webinars",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\" : 1,\r\n    \"category_id\" : 1,\r\n    \"name\" : \"Webinar Teknologi 2021\",\r\n    \"description\" : \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\r\n    \"Price\" : \"0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/webinars"
+					},
+					"response": [
+						{
+							"name": "Add Webinars",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\" : 1,\r\n    \"category_id\" : 1,\r\n    \"name\" : \"Webinar Teknologi 2021\",\r\n    \"description\" : \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\r\n    \"Price\" : \"0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/webinars"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:10:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "333"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 3,\n        \"user_id\": 1,\n        \"category_id\": 1,\n        \"image_url\": \"\",\n        \"name\": \"Webinar Teknologi 2021\",\n        \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n        \"price\": \"0\",\n        \"created_at\": \"2021-08-15T22:10:55.967+07:00\",\n        \"updated_at\": \"2021-08-15T22:10:55.967+07:00\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit Webinars",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\" : 2,\r\n    \"name\" : \"Webinar Bisnis 2022 EDIT\",\r\n    \"price\" : \"13\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/webinars/id/7"
+					},
+					"response": [
+						{
+							"name": "Edit Webinars",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\" : 1,\r\n    \"category_id\" : 1,\r\n    \"name\" : \"Webinar Teknologi 2022 EDIT\",\r\n    \"description\" : \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\r\n    \"Price\" : \"0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/webinars/id/3"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:46:54 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "467"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 3,\n        \"user_id\": 1,\n        \"category_id\": 1,\n        \"categories\": {\n            \"ID\": 0,\n            \"Name\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null\n        },\n        \"category_name\": \"\",\n        \"image_url\": \"\",\n        \"name\": \"Webinar Teknologi 2022 EDIT\",\n        \"description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n        \"price\": \"0\",\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"2021-08-15T22:46:54.859+07:00\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Webinars",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/webinars/id/5"
+					},
+					"response": [
+						{
+							"name": "Delete Webinars",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/webinars/id/5"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:47:38 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "394"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 5,\n        \"user_id\": 0,\n        \"category_id\": 0,\n        \"categories\": {\n            \"ID\": 0,\n            \"Name\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null\n        },\n        \"category_name\": \"\",\n        \"image_url\": \"\",\n        \"name\": \"\",\n        \"description\": \"\",\n        \"price\": \"\",\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": \"2021-08-15T22:47:38.228+07:00\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Favourites",
+			"item": [
+				{
+					"name": "Get Favourites By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/favourites/id/1"
+					},
+					"response": [
+						{
+							"name": "Get Webinars By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/webinars/id/3"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Aug 2021 15:40:31 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "354"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"ID\": 3,\n        \"UserID\": 1,\n        \"CategoryID\": 1,\n        \"CategoryName\": \"Teknologi\",\n        \"ImageUrl\": \"\",\n        \"Name\": \"Webinar Teknologi 2021\",\n        \"Description\": \"Ikuti ini, anda akan mendapatkan ilmu, sertifikat secara gratis\",\n        \"Price\": \"0\",\n        \"CreatedAt\": \"2021-08-15T22:10:55.967+07:00\",\n        \"UpdatedAt\": \"2021-08-15T22:10:55.967+07:00\",\n        \"DeletedAt\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Favourites By User ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/favourites"
+					},
+					"response": [
+						{
+							"name": "Get Favourites By UserID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/favourites"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 16:24:35 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "310"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": [\n        {\n            \"id\": 1,\n            \"user_id\": 1,\n            \"webinar_id\": 3,\n            \"webinar_name\": \"Webinar Teknologi 2022 EDIT\",\n            \"created_at\": \"2021-08-17T12:28:27.893+07:00\",\n            \"updated_at\": \"2021-08-17T12:28:27.893+07:00\",\n            \"deleted_at\": null\n        }\n    ],\n    \"pagination\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 1,\n        \"per_page\": 10\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\" : 1,\r\n    \"webinar_id\" : 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/favourites"
+					},
+					"response": [
+						{
+							"name": "Add Favourites",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\" : 1,\r\n    \"webinar_id\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/favourites"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 05:28:27 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "796"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 1,\n        \"user_id\": 1,\n        \"users\": {\n            \"ID\": 0,\n            \"Name\": \"\",\n            \"Email\": \"\",\n            \"Username\": \"\",\n            \"Password\": \"\",\n            \"ImageUrl\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n        },\n        \"webinar_id\": 3,\n        \"webinars\": {\n            \"ID\": 0,\n            \"UserID\": 0,\n            \"User\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"Email\": \"\",\n                \"Username\": \"\",\n                \"Password\": \"\",\n                \"ImageUrl\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n            },\n            \"CategoryID\": 0,\n            \"Categories\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n                \"DeletedAt\": null\n            },\n            \"ImageUrl\": \"\",\n            \"Name\": \"\",\n            \"Description\": \"\",\n            \"Price\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null\n        },\n        \"created_at\": \"2021-08-17T12:28:27.893+07:00\",\n        \"updated_at\": \"2021-08-17T12:28:27.893+07:00\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/webinars/id/5"
+					},
+					"response": [
+						{
+							"name": "Delete Favourites",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/favourites/id/2"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 05:29:53 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "804"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 2,\n        \"user_id\": 0,\n        \"users\": {\n            \"ID\": 0,\n            \"Name\": \"\",\n            \"Email\": \"\",\n            \"Username\": \"\",\n            \"Password\": \"\",\n            \"ImageUrl\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n        },\n        \"webinar_id\": 0,\n        \"webinars\": {\n            \"ID\": 0,\n            \"UserID\": 0,\n            \"User\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"Email\": \"\",\n                \"Username\": \"\",\n                \"Password\": \"\",\n                \"ImageUrl\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n            },\n            \"CategoryID\": 0,\n            \"Categories\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n                \"DeletedAt\": null\n            },\n            \"ImageUrl\": \"\",\n            \"Name\": \"\",\n            \"Description\": \"\",\n            \"Price\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null\n        },\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": \"2021-08-17T12:29:53.74+07:00\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get Transactions By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/transactions/id/1"
+					},
+					"response": [
+						{
+							"name": "Get Transactions By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/transactions/id/1"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 15:21:37 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "253"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 1,\n        \"user_id\": 1,\n        \"webinar_id\": 3,\n        \"webinars\": \"Webinar Teknologi 2022 EDIT\",\n        \"status\": \"pending\",\n        \"created_at\": \"2021-08-17T15:07:21.906+07:00\",\n        \"updated_at\": \"2021-08-17T15:07:21.906+07:00\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Transactions By User ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/transactions"
+					},
+					"response": [
+						{
+							"name": "Get Transactions By User ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/transactions"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 16:54:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "529"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": [\n        {\n            \"id\": 1,\n            \"user_id\": 1,\n            \"webinar_id\": 3,\n            \"webinars\": \"Webinar Teknologi 2022 EDIT\",\n            \"status\": \"pending\",\n            \"created_at\": \"2021-08-17T15:07:21.906+07:00\",\n            \"updated_at\": \"2021-08-17T15:07:21.906+07:00\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 3,\n            \"user_id\": 1,\n            \"webinar_id\": 3,\n            \"webinars\": \"Webinar Teknologi 2022 EDIT\",\n            \"status\": \"pending\",\n            \"created_at\": \"2021-08-17T22:25:55.803+07:00\",\n            \"updated_at\": \"2021-08-17T22:25:55.803+07:00\",\n            \"deleted_at\": null\n        }\n    ],\n    \"pagination\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 2,\n        \"per_page\": 10\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Transactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"webinar_id\" : 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/transactions"
+					},
+					"response": [
+						{
+							"name": "Add Transactions",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"webinar_id\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/transactions"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 15:25:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "226"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 3,\n        \"user_id\": 1,\n        \"webinar_id\": 3,\n        \"webinars\": \"\",\n        \"status\": \"pending\",\n        \"created_at\": \"2021-08-17T22:25:55.803+07:00\",\n        \"updated_at\": \"2021-08-17T22:25:55.803+07:00\",\n        \"deleted_at\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Transactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/transactions/id/2"
+					},
+					"response": [
+						{
+							"name": "Delete Favourites",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/favourites/id/2"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 05:29:53 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "804"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"id\": 2,\n        \"user_id\": 0,\n        \"users\": {\n            \"ID\": 0,\n            \"Name\": \"\",\n            \"Email\": \"\",\n            \"Username\": \"\",\n            \"Password\": \"\",\n            \"ImageUrl\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n        },\n        \"webinar_id\": 0,\n        \"webinars\": {\n            \"ID\": 0,\n            \"UserID\": 0,\n            \"User\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"Email\": \"\",\n                \"Username\": \"\",\n                \"Password\": \"\",\n                \"ImageUrl\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\"\n            },\n            \"CategoryID\": 0,\n            \"Categories\": {\n                \"ID\": 0,\n                \"Name\": \"\",\n                \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n                \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n                \"DeletedAt\": null\n            },\n            \"ImageUrl\": \"\",\n            \"Name\": \"\",\n            \"Description\": \"\",\n            \"Price\": \"\",\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null\n        },\n        \"created_at\": \"0001-01-01T00:00:00Z\",\n        \"updated_at\": \"0001-01-01T00:00:00Z\",\n        \"deleted_at\": \"2021-08-17T12:29:53.74+07:00\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Weathers",
+			"item": [
+				{
+					"name": "Get Weathers by City Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Teknologi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/weathers/Surabaya"
+					},
+					"response": [
+						{
+							"name": "Get Weathers by City Name",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/api/weathers/Surabaya"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 22 Aug 2021 09:42:35 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "384"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"code\": 200,\n        \"message\": \"Success\"\n    },\n    \"data\": {\n        \"name\": \"Surabaya\",\n        \"base\": \"stations\",\n        \"coord\": {\n            \"lat\": -7.2492,\n            \"lon\": 112.7508\n        },\n        \"weather\": [\n            {\n                \"description\": \"few clouds\",\n                \"icon\": \"02d\",\n                \"id\": 801,\n                \"main\": \"Clouds\"\n            }\n        ],\n        \"clouds\": {\n            \"all\": 20\n        },\n        \"main\": {\n            \"feels_like\": 306.99,\n            \"humidity\": 48,\n            \"pressure\": 1008,\n            \"temp\": 305.12,\n            \"temp_max\": 305.12,\n            \"temp_min\": 305.12\n        },\n        \"visibility\": 10000,\n        \"wind\": {\n            \"deg\": 70,\n            \"speed\": 4.12\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
