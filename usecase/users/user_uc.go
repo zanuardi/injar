@@ -27,10 +27,6 @@ func (uc *userUsecase) CreateToken(ctx context.Context, username, password strin
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
-	if strings.TrimSpace(username) == "" && strings.TrimSpace(password) == "" {
-		return "", usecase.ErrUsernamePasswordNotFound
-	}
-
 	userDomain, err := uc.userRepository.GetByUsername(ctx, username)
 	if err != nil {
 		return "", err
