@@ -27,6 +27,10 @@ import (
 	_filesRepo "injar/repository/databases/files"
 	_filesUsecase "injar/usecase/files"
 
+	_weatherController "injar/controllers/weather"
+	_weatherRepo "injar/repository/thirdparties/weather"
+	_weatherUsecase "injar/usecase/weather"
+
 	_dbDriver "injar/repository/mysql"
 
 	"log"
@@ -97,6 +101,11 @@ func main() {
 	filesUsecase := _filesUsecase.NewFileUC(timeoutContext, filesRepo)
 	filesCtrl := _filesController.NewFileController(filesUsecase, db)
 
+	// files ...
+	weatherRepo := _weatherRepo.NewWeatherRepository()
+	weatherUsecase := _weatherUsecase.NewWeatherUsecase(timeoutContext, weatherRepo)
+	weatherCtrl := _weatherController.NewWeatherController(e, weatherUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:          configJWT.Init(),
 		UserController:         *userCtrl,
@@ -105,6 +114,7 @@ func main() {
 		FavouritesController:   *favouritesCtrl,
 		TransactionsController: *transactionsCtrl,
 		FileController:         *filesCtrl,
+		WeatherController:      *weatherCtrl,
 	}
 	routesInit.RouteRegister(e)
 
